@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Landing Page Studio - Design branded landing pages for kiosks and curated user experiences. Visual editor with live preview and enterprise deployment.">
+    <title>Landing Page Studio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header role="banner">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Landing Page Studio logo">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#9d8cff"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#64d2ff"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#64d2ff"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#9d8cff"/>
+        </svg>
+        <h1>Landing Page Studio</h1>
+        <span id="saveIndicator" class="save-indicator" aria-live="polite"></span>
+    </header>
+
+    <main id="main-content" class="container" role="main">
+        <!-- Editor Panel -->
+        <section class="panel" aria-labelledby="config-heading">
+            <h2 id="config-heading" class="panel-header">Configuration</h2>
+            <div class="panel-body editor-scroll">
+                <!-- Tab Navigation -->
+                <nav class="tab-nav" role="tablist">
+                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-page" tabindex="0" onclick="switchTab('page')" onkeydown="handleTabKeydown(event)">Page</button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-theme" tabindex="-1" onclick="switchTab('theme')" onkeydown="handleTabKeydown(event)">Theme</button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-links" tabindex="-1" onclick="switchTab('links')" onkeydown="handleTabKeydown(event)">Links</button>
+                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-export" tabindex="-1" onclick="switchTab('export')" onkeydown="handleTabKeydown(event)">Export</button>
+                </nav>
+
+                <!-- Page Tab -->
+                <div id="tab-page" class="tab-panel active" role="tabpanel">
+                <fieldset style="border: none; padding: 0; margin: 0;">
+                    <legend class="visually-hidden">Page Settings</legend>
+                    <div class="template-section" aria-labelledby="templates-heading">
+                        <h3 id="templates-heading" class="section-title">Quick Start Templates</h3>
+                        <p class="template-description">Load a ready-made layout to customize.</p>
+                        <div class="template-grid">
+                            <article class="template-card">
+                                <h4>Customer Facing Kiosk</h4>
+                                <p>Wayfinding, services, and guest support links for on-site kiosks.</p>
+                                <div class="template-actions">
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadTemplate('customerFacing')">Load template</button>
+                                </div>
+                            </article>
+                            <article class="template-card">
+                                <h4>Employee Kiosk</h4>
+                                <p>HR, IT, and operational tools for team members and shared devices.</p>
+                                <div class="template-actions">
+                                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadTemplate('employeeKiosk')">Load template</button>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="template-import">
+                            <label for="importFile" class="btn btn-secondary btn-sm" style="cursor: pointer;">
+                                Import Existing Start Page
+                                <input type="file" id="importFile" accept=".html,text/html" onchange="importStartPage(this)" class="visually-hidden">
+                            </label>
+                            <p class="template-import-note">Load a previously generated start page to edit.</p>
+                        </div>
+                    </div>
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+                    <div class="form-group">
+                        <label for="pageTitle">Page Title <small>(browser tab)</small></label>
+                        <input type="text" id="pageTitle" value="Quick Links" oninput="debouncedUpdatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="greeting">Greeting Text</label>
+                        <input type="text" id="greeting" value="Welcome" oninput="debouncedUpdatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="showComputerName" checked onchange="updatePreview()">
+                            <label for="showComputerName">Show computer name</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="computerNamePositionGroup">
+                        <label for="computerNamePosition">Computer name position</label>
+                        <select id="computerNamePosition" onchange="validatePositions(); updatePreview(); updateDateTimePositionOptions();">
+                            <option value="top-right" selected>Top Right</option>
+                            <option value="top-center">Top Center</option>
+                            <option value="top-left">Top Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-center">Bottom Center</option>
+                            <option value="bottom-left">Bottom Left</option>
+                        </select>
+                        <small id="computerNamePositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="showDateTime" onchange="updatePreview()">
+                            <label for="showDateTime">Show date/time <small>(ISO 8601)</small></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="dateTimeOptionsGroup" style="display: none;">
+                        <label for="dateTimeFormat">Display format</label>
+                        <select id="dateTimeFormat" onchange="updatePreview()">
+                            <option value="both" selected>Date and Time</option>
+                            <option value="date">Date only</option>
+                            <option value="time">Time only</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="dateTimePositionGroup" style="display: none;">
+                        <label for="dateTimePosition">Date/time position</label>
+                        <select id="dateTimePosition" onchange="validatePositions(); updatePreview()">
+                            <option value="top-left">Top Left</option>
+                            <option value="top-center">Top Center</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-center">Bottom Center</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="footer">In Footer</option>
+                        </select>
+                        <small id="dateTimePositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topLogoUrl">Main Logo <small>(above greeting text)</small></label>
+                        <div class="logo-input-row">
+                            <input type="url" id="topLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
+                            <label for="topLogoUpload" class="btn btn-secondary btn-sm upload-btn">
+                                Upload SVG
+                                <input type="file" id="topLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('top', this)" class="visually-hidden">
+                            </label>
+                            <button type="button" class="btn btn-sm" onclick="clearLogo('top')" aria-label="Clear main logo" title="Clear">&#10005;</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sideLogoUrl">Small Logo</label>
+                        <div class="logo-input-row">
+                            <input type="url" id="sideLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
+                            <label for="sideLogoUpload" class="btn btn-secondary btn-sm upload-btn">
+                                Upload SVG
+                                <input type="file" id="sideLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('side', this)" class="visually-hidden">
+                            </label>
+                            <button type="button" class="btn btn-sm" onclick="clearLogo('side')" aria-label="Clear small logo" title="Clear">&#10005;</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="sideLogoPositionGroup" style="display: none;">
+                        <label for="sideLogoPosition">Small logo position</label>
+                        <select id="sideLogoPosition" onchange="validatePositions(); updatePreview()">
+                            <option value="left" selected>Left of greeting</option>
+                            <option value="right">Right of greeting</option>
+                            <option value="top-left">Top Left</option>
+                            <option value="top-center">Top Center</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="bottom-center">Bottom Center</option>
+                            <option value="bottom-right">Bottom Right</option>
+                        </select>
+                        <small id="sideLogoPositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="showFooter" checked onchange="updatePreview()">
+                            <label for="showFooter">Show footer</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="footerTextGroup">
+                        <label for="footerText">Footer Text</label>
+                        <input type="text" id="footerText" value="" oninput="debouncedUpdatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enableAutoRefresh" onchange="updatePreview()">
+                            <label for="enableAutoRefresh">Auto-redirect to another page</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="autoRefreshOptionsGroup" style="display: none;">
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <div style="flex: 0 0 auto;">
+                                <label for="autoRefreshDelay">Delay (seconds)</label>
+                                <input type="number" id="autoRefreshDelay" value="30" min="1" max="3600" style="width: 80px;" oninput="debouncedUpdatePreview()">
+                            </div>
+                            <div style="flex: 1; min-width: 200px;">
+                                <label for="autoRefreshUrl">Redirect URL</label>
+                                <input type="url" id="autoRefreshUrl" value="" placeholder="https://example.com" oninput="debouncedUpdatePreview()" onblur="validateUrlInput(this)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scriptName">Script Name <small>(used in filename)</small></label>
+                        <input type="text" id="scriptName" value="MyLandingPage" placeholder="MyLandingPage" oninput="debouncedUpdatePreview()">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="destinationPath">Destination Path <small>(where landing page will be saved)</small></label>
+                        <input type="text" id="destinationPath" value="C:\ProgramData\LandingPage\index.html" placeholder="C:\ProgramData\LandingPage\index.html">
+                    </div>
+                </fieldset>
+                </div>
+
+                <!-- Theme Tab -->
+                <div id="tab-theme" class="tab-panel" role="tabpanel">
+                <section aria-labelledby="theme-heading">
+                    <p id="theme-description" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                        Choose a color theme for your landing page.
+                    </p>
+
+                    <div class="theme-swatches" role="radiogroup" aria-labelledby="theme-heading" id="themeSwatches">
+                        <!-- Swatches will be rendered by JavaScript -->
+                    </div>
+
+                    <div id="customColors" class="custom-colors">
+                        <div class="color-input-group">
+                            <label for="customPrimary">Primary Color</label>
+                            <div class="color-input-row">
+                                <input type="color" id="customPrimaryPicker" value="#0053E2" onchange="syncColorInput('primary', this.value)">
+                                <input type="text" id="customPrimary" value="#0053E2" placeholder="#000000" oninput="syncColorPicker('primary', this.value)">
+                            </div>
+                        </div>
+                        <div class="color-input-group">
+                            <label for="customAccent">Accent Color</label>
+                            <div class="color-input-row">
+                                <input type="color" id="customAccentPicker" value="#FFC220" onchange="syncColorInput('accent', this.value)">
+                                <input type="text" id="customAccent" value="#FFC220" placeholder="#000000" oninput="syncColorPicker('accent', this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="customWarning" class="custom-warning">
+                        Custom colors may not meet WCAG accessibility standards. Ensure sufficient contrast between background and text colors.
+                    </div>
+                </section>
+                </div>
+
+                <!-- Links Tab -->
+                <div id="tab-links" class="tab-panel" role="tabpanel">
+                <!-- Link Groups -->
+                <section aria-labelledby="groups-heading">
+                    <h3 id="groups-heading" style="color: var(--primary); margin-bottom: 0.5rem;">Link Groups</h3>
+                    <p id="groups-description" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                        Organize links into groups with headings.
+                    </p>
+
+                    <div id="groupsContainer" class="groups-container" role="region" aria-labelledby="groups-heading" aria-describedby="groups-description" aria-live="polite">
+                        <!-- Groups will be added here dynamically -->
+                    </div>
+
+                    <div class="actions-bar">
+                        <button type="button" class="btn btn-primary" onclick="addGroup()" aria-describedby="groups-description">
+                            + Add Group
+                        </button>
+                    </div>
+                </section>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                <!-- Standalone Links -->
+                <section aria-labelledby="ungrouped-heading">
+                    <div class="section-header" id="ungrouped-links-header" onclick="toggleSection('ungrouped-links')" aria-expanded="true" aria-controls="ungrouped-links-content" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleSection('ungrouped-links')}">
+                        <h3 id="ungrouped-heading" style="color: var(--primary); cursor: pointer;">
+                            <span class="collapse-icon">&#9660;</span> Standalone Links
+                        </h3>
+                    </div>
+                    <div class="section-content" id="ungrouped-links-content">
+                    <p id="ungrouped-description" style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                        Links here appear without a group heading.
+                    </p>
+
+                    <div id="ungroupedLinksContainer" role="region" aria-labelledby="ungrouped-heading" aria-live="polite">
+                        <!-- Ungrouped links will be added here -->
+                    </div>
+
+                    <div class="actions-bar">
+                        <button type="button" class="btn btn-secondary" onclick="addUngroupedLink()" aria-describedby="ungrouped-description">
+                            + Add Link
+                        </button>
+                    </div>
+                    </div>
+                </section>
+                </div>
+
+                <!-- Export Tab -->
+                <div id="tab-export" class="tab-panel" role="tabpanel">
+                <section class="output-section" aria-labelledby="output-heading">
+                    <h3 id="output-heading" class="visually-hidden">Download Options</h3>
+                    <div class="output-actions" style="flex-direction: column; align-items: center;">
+                        <button type="button" class="btn btn-generate" onclick="downloadScript()">
+                            Download PowerShell Script (Recommended)
+                        </button>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0;">
+                            Captures computer name at runtime. Deploy via Intune/SCCM.
+                        </p>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="downloadHTML()" style="margin-top: 0.5rem;">
+                            Download HTML Only
+                        </button>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.25rem 0 0 0;">
+                            For testing. Computer name shows as placeholder.
+                        </p>
+                        <hr style="width: 100%; margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="resetAll()" style="margin-top: 0.75rem;">
+                            Reset Everything
+                        </button>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.25rem 0 0 0;">
+                            Clear all settings and start fresh.
+                        </p>
+                    </div>
+                </section>
+                </div>
+            </div>
+        </section>
+
+        <!-- Preview Panel -->
+        <section class="panel preview-container" aria-labelledby="preview-heading">
+            <h2 id="preview-heading" class="panel-header">Live Preview</h2>
+            <div class="preview-frame">
+                <iframe id="previewFrame" title="Landing page preview"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <footer role="contentinfo">
+        <p>Landing Page Studio | Author: <a href="https://www.linkedin.com/in/joshua-walderbach" target="_blank" rel="noopener noreferrer">Joshua Walderbach</a></p>
+    </footer>
+
+    <!-- Screen reader announcements -->
+    <div id="sr-announcements" class="visually-hidden" role="status" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Instruction modal -->
+    <div id="instructionModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-title">PowerShell Script Downloaded</h2>
+                <button type="button" class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="closeModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
