@@ -732,6 +732,7 @@ function removeLinkFromGroup(groupId, linkId) {
 let draggedGroupId = null;
 let draggedLinkId = null;
 let draggedLinkGroupId = null;
+let draggedUngroupedId = null;
 
 // Group drag handlers
 function handleGroupDragStart(e, groupId) {
@@ -838,6 +839,53 @@ function handleLinkDrop(e, targetGroupId, targetLinkId) {
     renderGroups();
     updatePreview();
     announce('Link reordered');
+}
+
+// Ungrouped link drag handlers
+function handleUngroupedDragStart(e, linkId) {
+    draggedUngroupedId = linkId;
+    e.target.closest('.link-row').classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+}
+
+function handleUngroupedDragEnd() {
+    draggedUngroupedId = null;
+    document.querySelectorAll('.link-row').forEach(el => {
+        el.classList.remove('dragging', 'drag-over');
+    });
+}
+
+function handleUngroupedDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const row = e.target.closest('.link-row');
+    if (row && draggedUngroupedId !== null) {
+        row.classList.add('drag-over');
+    }
+}
+
+function handleUngroupedDragLeave(e) {
+    const row = e.target.closest('.link-row');
+    if (row) {
+        row.classList.remove('drag-over');
+    }
+}
+
+function handleUngroupedDrop(e, targetLinkId) {
+    e.preventDefault();
+    if (draggedUngroupedId === null || draggedUngroupedId === targetLinkId) return;
+
+    const fromIndex = ungroupedLinks.findIndex(l => l.id === draggedUngroupedId);
+    const toIndex = ungroupedLinks.findIndex(l => l.id === targetLinkId);
+
+    if (fromIndex === -1 || toIndex === -1) return;
+
+    const [movedLink] = ungroupedLinks.splice(fromIndex, 1);
+    ungroupedLinks.splice(toIndex, 0, movedLink);
+
+    renderUngroupedLinks();
+    updatePreview();
+    announce('Standalone link reordered');
 }
 
 // Update group name
@@ -1028,7 +1076,14 @@ function renderUngroupedLinks() {
     }
 
     container.innerHTML = `<div role="list" aria-label="Standalone links">` + ungroupedLinks.map((link, linkIndex) => `
-        <div class="link-row" style="margin-bottom: 0.75rem;" role="listitem">
+        <div class="link-row" style="margin-bottom: 0.75rem;" role="listitem"
+             draggable="true"
+             ondragstart="handleUngroupedDragStart(event, ${link.id})"
+             ondragend="handleUngroupedDragEnd(event)"
+             ondragover="handleUngroupedDragOver(event)"
+             ondragleave="handleUngroupedDragLeave(event)"
+             ondrop="handleUngroupedDrop(event, ${link.id})">
+            <span class="drag-handle" title="Drag to reorder">⋮</span>
             <select class="link-type-select" aria-label="Link type" onchange="updateUngroupedLink(${link.id}, 'type', this.value); renderUngroupedLinks();">
                 <option value="web" ${(link.type || 'web') === 'web' ? 'selected' : ''}>Web</option>
                 <option value="app" ${link.type === 'app' ? 'selected' : ''}>App</option>
