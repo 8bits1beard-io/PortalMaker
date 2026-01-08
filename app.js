@@ -1257,7 +1257,7 @@ function generateHTML(useComputerNameVariable = false) {
 
     // Build configuration object for import/export
     const config = {
-        version: '1.0',
+        version: '1.1',
         generator: 'Landing Page Studio',
         settings: {
             pageTitle,
