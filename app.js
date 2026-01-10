@@ -550,6 +550,7 @@ const STORAGE_KEY = 'startPageStudioState';
 // Save current state to localStorage
 function saveState() {
     const state = {
+        appVersion: APP_VERSION,
         groups,
         ungroupedLinks,
         groupIdCounter,
@@ -605,6 +606,7 @@ function loadState() {
         const saved = localStorage.getItem(STORAGE_KEY);
         if (saved) {
             const state = JSON.parse(saved);
+            const isLegacyState = !state.appVersion;
 
             // Restore arrays and counters
             groups = state.groups || [];
@@ -617,8 +619,11 @@ function loadState() {
             // Restore form settings
             if (state.settings) {
                 document.getElementById('pageTitle').value = state.settings.pageTitle || 'Quick Links';
-                document.getElementById('greeting').value = state.settings.greeting || '';
-                document.getElementById('showComputerName').checked = state.settings.showComputerName !== false;
+                const storedGreeting = state.settings.greeting || '';
+                document.getElementById('greeting').value = (isLegacyState && storedGreeting === 'Welcome')
+                    ? ''
+                    : storedGreeting;
+                document.getElementById('showComputerName').checked = state.settings.showComputerName === true;
                 document.getElementById('computerNamePosition').value = state.settings.computerNamePosition || 'top-right';
                 document.getElementById('showDateTime').checked = state.settings.showDateTime || false;
                 document.getElementById('dateTimeFormat').value = state.settings.dateTimeFormat || 'both';
@@ -1059,6 +1064,11 @@ function renderGroups() {
                                aria-label="Shortcut filename"
                                style="width: 120px;"
                                onchange="updateGroupLink(${group.id}, ${link.id}, 'shortcutName', this.value)">
+                        <input type="text" id="link-shortcutpath-${group.id}-${link.id}" value="${escapeHtml(link.shortcutPath || '')}"
+                               placeholder="Existing shortcut path (optional)"
+                               aria-label="Existing shortcut path"
+                               style="min-width: 220px;"
+                               onchange="updateGroupLink(${group.id}, ${link.id}, 'shortcutPath', this.value)">
                         `}
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeLinkFromGroup(${group.id}, ${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                             <span aria-hidden="true">X</span>
@@ -1123,6 +1133,11 @@ function renderUngroupedLinks() {
                    aria-label="Shortcut filename"
                    style="width: 120px;"
                    onchange="updateUngroupedLink(${link.id}, 'shortcutName', this.value)">
+            <input type="text" id="ungrouped-shortcutpath-${link.id}" value="${escapeHtml(link.shortcutPath || '')}"
+                   placeholder="Existing shortcut path (optional)"
+                   aria-label="Existing shortcut path"
+                   style="min-width: 220px;"
+                   onchange="updateUngroupedLink(${link.id}, 'shortcutPath', this.value)">
             `}
             <button type="button" class="btn btn-danger btn-sm" onclick="removeUngroupedLink(${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                 <span aria-hidden="true">X</span>
@@ -1184,10 +1199,10 @@ function generateHTML(useComputerNameVariable = false) {
     let linksHTML = '';
 
     // Add grouped links
-    const validGroups = groups.filter(g => g.name && g.links.some(l => l.name && (l.url || l.appPath)));
+    const validGroups = groups.filter(g => g.name && g.links.some(l => l.name && (l.url || l.appPath || l.shortcutPath)));
     if (validGroups.length > 0) {
         linksHTML += validGroups.map(group => {
-            const validLinks = group.links.filter(l => l.name && (l.url || l.appPath));
+            const validLinks = group.links.filter(l => l.name && (l.url || l.appPath || l.shortcutPath));
             if (validLinks.length === 0) return '';
 
             const groupId = `group-${group.id}`;
@@ -1200,7 +1215,7 @@ function generateHTML(useComputerNameVariable = false) {
                 <ul class="links-list">
                     ${validLinks.map(link => {
                         const href = link.type === 'app'
-                            ? './' + escapeHtml(link.shortcutName || link.name + '.lnk')
+                            ? (link.shortcutPath ? escapeHtml(link.shortcutPath) : './' + escapeHtml(link.shortcutName || link.name + '.lnk'))
                             : escapeHtml(link.url);
                         return `<li><a href="${href}" class="link-button">${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
@@ -1210,13 +1225,13 @@ function generateHTML(useComputerNameVariable = false) {
     }
 
     // Add standalone links (no group heading)
-    const validUngrouped = ungroupedLinks.filter(l => l.name && (l.url || l.appPath));
+    const validUngrouped = ungroupedLinks.filter(l => l.name && (l.url || l.appPath || l.shortcutPath));
     if (validUngrouped.length > 0) {
         linksHTML += `
             <div class="standalone-links">
                 ${validUngrouped.map(link => {
                     const href = link.type === 'app'
-                        ? './' + escapeHtml(link.shortcutName || link.name + '.lnk')
+                        ? (link.shortcutPath ? escapeHtml(link.shortcutPath) : './' + escapeHtml(link.shortcutName || link.name + '.lnk'))
                         : escapeHtml(link.url);
                     return `<a href="${href}" class="link-button standalone">${escapeHtml(link.name)}</a>`;
                 }).join('')}
@@ -1305,7 +1320,8 @@ function generateHTML(useComputerNameVariable = false) {
                 url: l.url || '',
                 appPath: l.appPath || '',
                 appArgs: l.appArgs || '',
-                shortcutName: l.shortcutName || ''
+                shortcutName: l.shortcutName || '',
+                shortcutPath: l.shortcutPath || ''
             }))
         })),
         ungroupedLinks: ungroupedLinks.map(l => ({
@@ -1314,7 +1330,8 @@ function generateHTML(useComputerNameVariable = false) {
             url: l.url || '',
             appPath: l.appPath || '',
             appArgs: l.appArgs || '',
-            shortcutName: l.shortcutName || ''
+            shortcutName: l.shortcutName || '',
+            shortcutPath: l.shortcutPath || ''
         }))
     };
     const configJson = JSON.stringify(config);
@@ -1841,7 +1858,7 @@ function generatePowerShellScript() {
     const appLinks = [];
     groups.forEach(group => {
         group.links.forEach(link => {
-            if (link.type === 'app' && link.appPath) {
+            if (link.type === 'app' && link.appPath && !link.shortcutPath) {
                 appLinks.push({
                     name: link.shortcutName || (link.name + '.lnk'),
                     path: link.appPath,
@@ -1851,7 +1868,7 @@ function generatePowerShellScript() {
         });
     });
     ungroupedLinks.forEach(link => {
-        if (link.type === 'app' && link.appPath) {
+        if (link.type === 'app' && link.appPath && !link.shortcutPath) {
             appLinks.push({
                 name: link.shortcutName || (link.name + '.lnk'),
                 path: link.appPath,
@@ -2079,7 +2096,7 @@ function applyImportedConfig(config) {
     if (config.settings) {
         document.getElementById('pageTitle').value = config.settings.pageTitle || 'Quick Links';
         document.getElementById('greeting').value = config.settings.greeting || '';
-        document.getElementById('showComputerName').checked = config.settings.showComputerName !== false;
+        document.getElementById('showComputerName').checked = config.settings.showComputerName === true;
         document.getElementById('computerNamePosition').value = config.settings.computerNamePosition || 'top-right';
         document.getElementById('showDateTime').checked = config.settings.showDateTime || false;
         document.getElementById('dateTimeFormat').value = config.settings.dateTimeFormat || 'both';
@@ -2120,7 +2137,8 @@ function applyImportedConfig(config) {
                 url: l.url || '',
                 appPath: l.appPath || '',
                 appArgs: l.appArgs || '',
-                shortcutName: l.shortcutName || ''
+                shortcutName: l.shortcutName || '',
+                shortcutPath: l.shortcutPath || ''
             }))
         }));
         renderGroups();
@@ -2135,7 +2153,8 @@ function applyImportedConfig(config) {
             url: l.url || '',
             appPath: l.appPath || '',
             appArgs: l.appArgs || '',
-            shortcutName: l.shortcutName || ''
+            shortcutName: l.shortcutName || '',
+            shortcutPath: l.shortcutPath || ''
         }));
         renderUngroupedLinks();
     }
@@ -2195,7 +2214,7 @@ function resetAll() {
     // Reset form fields to defaults
     document.getElementById('pageTitle').value = DEFAULTS.pageTitle;
     document.getElementById('greeting').value = DEFAULTS.greeting;
-    document.getElementById('showComputerName').checked = true;
+    document.getElementById('showComputerName').checked = false;
     document.getElementById('computerNamePosition').value = DEFAULTS.computerNamePosition;
     document.getElementById('showDateTime').checked = false;
     document.getElementById('dateTimeFormat').value = DEFAULTS.dateTimeFormat;
