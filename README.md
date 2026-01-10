@@ -51,7 +51,7 @@
 
 Choose from 20 preset themes or create custom colors:
 
-**Walmart** · **Sunset** · **Violet** · **Slate** · **Forest** · **Ocean** · **Joy of Painting** · **Crimson** · **Monochrome** · **Berry** · **Midnight** · **Teal** · **Coffee** · **Steel** · **Winter** · **Spring** · **Summer** · **Independence** · **Halloween** · **Synthwave** · **Corporate**
+**Walmart** · **Sunset** · **Violet** · **Slate** · **Forest** · **Ocean** · **Crimson** · **Monochrome** · **Berry** · **Midnight** · **Teal** · **Coffee** · **Steel** · **Winter** · **Spring** · **Summer** · **Independence** · **Halloween** · **Synthwave** · **Corporate**
 
 ### Links
 

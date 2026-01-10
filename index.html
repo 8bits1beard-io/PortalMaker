@@ -12,10 +12,10 @@
 
     <header role="banner">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Landing Page Studio logo">
-            <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#9d8cff"/>
-            <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#64d2ff"/>
-            <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#64d2ff"/>
-            <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#9d8cff"/>
+            <rect x="3" y="3" width="7" height="7" rx="1.5" fill="#021E44"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5" fill="#FFB800"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5" fill="#FFB800"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5" fill="#021E44"/>
         </svg>
         <h1>Landing Page Studio</h1>
         <span id="saveIndicator" class="save-indicator" aria-live="polite"></span>
@@ -38,32 +38,12 @@
                 <div id="tab-page" class="tab-panel active" role="tabpanel">
                 <fieldset style="border: none; padding: 0; margin: 0;">
                     <legend class="visually-hidden">Page Settings</legend>
-                    <div class="template-section" aria-labelledby="templates-heading">
-                        <h3 id="templates-heading" class="section-title">Quick Start Templates</h3>
-                        <p class="template-description">Load a ready-made layout to customize.</p>
-                        <div class="template-grid">
-                            <article class="template-card">
-                                <h4>Customer Facing Kiosk</h4>
-                                <p>Wayfinding, services, and guest support links for on-site kiosks.</p>
-                                <div class="template-actions">
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadTemplate('customerFacing')">Load template</button>
-                                </div>
-                            </article>
-                            <article class="template-card">
-                                <h4>Employee Kiosk</h4>
-                                <p>HR, IT, and operational tools for team members and shared devices.</p>
-                                <div class="template-actions">
-                                    <button type="button" class="btn btn-secondary btn-sm" onclick="loadTemplate('employeeKiosk')">Load template</button>
-                                </div>
-                            </article>
-                        </div>
-                        <div class="template-import">
-                            <label for="importFile" class="btn btn-secondary btn-sm" style="cursor: pointer;">
-                                Import Existing Start Page
-                                <input type="file" id="importFile" accept=".html,text/html" onchange="importStartPage(this)" class="visually-hidden">
-                            </label>
-                            <p class="template-import-note">Load a previously generated start page to edit.</p>
-                        </div>
+                    <div class="template-import" aria-label="Import existing start page">
+                        <label for="importFile" class="btn btn-secondary btn-sm" style="cursor: pointer;">
+                            Import Existing Start Page
+                            <input type="file" id="importFile" accept=".html,text/html" onchange="importStartPage(this)" class="visually-hidden">
+                        </label>
+                        <p class="template-import-note">Load a previously generated start page to edit.</p>
                     </div>
                     <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
                     <div class="form-group">

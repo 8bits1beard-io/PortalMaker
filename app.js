@@ -1,7 +1,7 @@
 // Default values
 const APP_VERSION = '1.0.0';
 const DEFAULTS = {
-    theme: 'joyOfPainting',
+    theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
     pageTitle: 'Quick Links',
     greeting: '',
@@ -276,7 +276,6 @@ const themes = {
     slate: { name: 'Slate', primary: '#1e293b', accent: '#f59e0b' },
     forest: { name: 'Forest', primary: '#166534', accent: '#fbbf24' },
     ocean: { name: 'Ocean', primary: '#0369a1', accent: '#06b6d4' },
-    joyOfPainting: { name: 'Joy of Painting', primary: '#021E44', accent: '#FFB800' },
     crimson: { name: 'Crimson', primary: '#991b1b', accent: '#fbbf24' },
     monochrome: { name: 'Monochrome', primary: '#171717', accent: '#a3a3a3' },
     berry: { name: 'Berry', primary: '#831843', accent: '#f9a8d4' },
@@ -613,7 +612,10 @@ function loadState() {
             ungroupedLinks = state.ungroupedLinks || [];
             groupIdCounter = state.groupIdCounter || 0;
             linkIdCounter = state.linkIdCounter || 0;
-            selectedTheme = state.selectedTheme || 'monochrome';
+            selectedTheme = state.selectedTheme || DEFAULTS.theme;
+            if (selectedTheme !== 'custom' && !themes[selectedTheme]) {
+                selectedTheme = DEFAULTS.theme;
+            }
             customColors = state.customColors || { primary: '#0053E2', accent: '#FFC220' };
 
             // Restore form settings
