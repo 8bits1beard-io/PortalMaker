@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.3';
+const APP_VERSION = '1.0.4';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -464,6 +464,66 @@ function clearGroupIcon(groupId) {
         document.getElementById(`group-icon-${groupId}`).value = '';
         updatePreview();
         announce('Group icon cleared');
+    }
+}
+
+// Handle link icon SVG upload
+function handleLinkIconUpload(targetType, groupId, linkId, input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    if (!file.type.includes('svg')) {
+        alert('Please upload an SVG file.');
+        input.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const svgContent = e.target.result;
+        const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svgContent);
+        if (targetType === 'group') {
+            const group = groups.find(g => g.id === groupId);
+            const link = group ? group.links.find(l => l.id === linkId) : null;
+            if (link) {
+                link.icon = dataUri;
+                document.getElementById(`link-icon-${groupId}-${linkId}`).value = dataUri;
+                updatePreview();
+                announce('Link icon uploaded');
+            }
+        } else {
+            const link = ungroupedLinks.find(l => l.id === linkId);
+            if (link) {
+                link.icon = dataUri;
+                document.getElementById(`ungrouped-icon-${linkId}`).value = dataUri;
+                updatePreview();
+                announce('Link icon uploaded');
+            }
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+// Clear link icon
+function clearLinkIcon(targetType, groupId, linkId) {
+    if (targetType === 'group') {
+        const group = groups.find(g => g.id === groupId);
+        const link = group ? group.links.find(l => l.id === linkId) : null;
+        if (link) {
+            link.icon = '';
+            document.getElementById(`link-icon-${groupId}-${linkId}`).value = '';
+            updatePreview();
+            announce('Link icon cleared');
+        }
+    } else {
+        const link = ungroupedLinks.find(l => l.id === linkId);
+        if (link) {
+            link.icon = '';
+            document.getElementById(`ungrouped-icon-${linkId}`).value = '';
+            updatePreview();
+            announce('Link icon cleared');
+        }
     }
 }
 
@@ -945,6 +1005,9 @@ function applyAppPreset(targetType, groupId, linkId, presetKey) {
             if (link) {
                 link.appPath = preset.path;
                 link.appArgs = preset.args;
+                if (!link.name) {
+                    link.name = preset.name;
+                }
             }
         }
         renderGroups();
@@ -953,6 +1016,9 @@ function applyAppPreset(targetType, groupId, linkId, presetKey) {
         if (link) {
             link.appPath = preset.path;
             link.appArgs = preset.args;
+            if (!link.name) {
+                link.name = preset.name;
+            }
         }
         renderUngroupedLinks();
     }
@@ -1048,6 +1114,17 @@ function renderGroups() {
                                class="${!link.name ? 'empty-warning' : ''}"
                                title="${!link.name ? 'Empty names will not appear in the generated page' : ''}"
                                onchange="updateGroupLink(${group.id}, ${link.id}, 'name', this.value)">
+                        <input type="text" id="link-icon-${group.id}-${link.id}" value="${escapeHtml(link.icon || '')}"
+                               placeholder="Icon URL (optional)"
+                               aria-label="Link icon URL"
+                               class="link-icon-input"
+                               onchange="updateGroupLink(${group.id}, ${link.id}, 'icon', this.value)">
+                        <label for="link-icon-upload-${group.id}-${link.id}" class="btn btn-secondary btn-sm upload-btn" title="Upload SVG">
+                            SVG
+                            <input type="file" id="link-icon-upload-${group.id}-${link.id}" accept=".svg,image/svg+xml"
+                                   onchange="handleLinkIconUpload('group', ${group.id}, ${link.id}, this)" class="visually-hidden">
+                        </label>
+                        <button type="button" class="btn btn-sm" onclick="clearLinkIcon('group', ${group.id}, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
                         ${(link.type || 'web') === 'web' ? `
                         <input type="url" id="link-url-${group.id}-${link.id}" value="${escapeHtml(link.url || '')}"
                                placeholder="https://example.com"
@@ -1117,6 +1194,17 @@ function renderUngroupedLinks() {
                    class="${!link.name ? 'empty-warning' : ''}"
                    title="${!link.name ? 'Empty names will not appear in the generated page' : ''}"
                    onchange="updateUngroupedLink(${link.id}, 'name', this.value)">
+            <input type="text" id="ungrouped-icon-${link.id}" value="${escapeHtml(link.icon || '')}"
+                   placeholder="Icon URL (optional)"
+                   aria-label="Link icon URL"
+                   class="link-icon-input"
+                   onchange="updateUngroupedLink(${link.id}, 'icon', this.value)">
+            <label for="ungrouped-icon-upload-${link.id}" class="btn btn-secondary btn-sm upload-btn" title="Upload SVG">
+                SVG
+                <input type="file" id="ungrouped-icon-upload-${link.id}" accept=".svg,image/svg+xml"
+                       onchange="handleLinkIconUpload('ungrouped', 0, ${link.id}, this)" class="visually-hidden">
+            </label>
+            <button type="button" class="btn btn-sm" onclick="clearLinkIcon('ungrouped', 0, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
             ${(link.type || 'web') === 'web' ? `
             <input type="url" id="ungrouped-url-${link.id}" value="${escapeHtml(link.url || '')}"
                    placeholder="https://example.com"
@@ -1224,7 +1312,8 @@ function generateHTML(useComputerNameVariable = false) {
                         const href = link.type === 'app'
                             ? (link.shortcutPath ? escapeHtml(link.shortcutPath) : './' + escapeHtml(link.shortcutName || link.name + '.lnk'))
                             : escapeHtml(link.url);
-                        return `<li><a href="${href}" class="link-button">${escapeHtml(link.name)}</a></li>`;
+                        const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
+                        return `<li><a href="${href}" class="link-button">${iconHtml}${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
                 </ul>
             </section>`;
@@ -1240,7 +1329,8 @@ function generateHTML(useComputerNameVariable = false) {
                     const href = link.type === 'app'
                         ? (link.shortcutPath ? escapeHtml(link.shortcutPath) : './' + escapeHtml(link.shortcutName || link.name + '.lnk'))
                         : escapeHtml(link.url);
-                    return `<a href="${href}" class="link-button standalone">${escapeHtml(link.name)}</a>`;
+                    const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
+                    return `<a href="${href}" class="link-button standalone">${iconHtml}${escapeHtml(link.name)}</a>`;
                 }).join('')}
             </div>`;
     }
@@ -1328,7 +1418,8 @@ function generateHTML(useComputerNameVariable = false) {
                 appPath: l.appPath || '',
                 appArgs: l.appArgs || '',
                 shortcutName: l.shortcutName || '',
-                shortcutPath: l.shortcutPath || ''
+                shortcutPath: l.shortcutPath || '',
+                icon: l.icon || ''
             }))
         })),
         ungroupedLinks: ungroupedLinks.map(l => ({
@@ -1338,7 +1429,8 @@ function generateHTML(useComputerNameVariable = false) {
             appPath: l.appPath || '',
             appArgs: l.appArgs || '',
             shortcutName: l.shortcutName || '',
-            shortcutPath: l.shortcutPath || ''
+            shortcutPath: l.shortcutPath || '',
+            icon: l.icon || ''
         }))
     };
     const configJson = JSON.stringify(config);
@@ -1536,7 +1628,7 @@ function generateHTML(useComputerNameVariable = false) {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             text-align: center;
             padding: 2rem;
@@ -1652,6 +1744,7 @@ function generateHTML(useComputerNameVariable = false) {
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 0.6rem;
             flex: 1;
             background-color: var(--accent-color);
             color: var(--primary-color);
@@ -1664,6 +1757,12 @@ function generateHTML(useComputerNameVariable = false) {
             transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
             min-height: 44px;
             min-width: 44px;
+        }
+
+        .link-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
         }
 
         .link-button:hover,
@@ -2145,7 +2244,8 @@ function applyImportedConfig(config) {
                 appPath: l.appPath || '',
                 appArgs: l.appArgs || '',
                 shortcutName: l.shortcutName || '',
-                shortcutPath: l.shortcutPath || ''
+                shortcutPath: l.shortcutPath || '',
+                icon: l.icon || ''
             }))
         }));
         renderGroups();
@@ -2161,7 +2261,8 @@ function applyImportedConfig(config) {
             appPath: l.appPath || '',
             appArgs: l.appArgs || '',
             shortcutName: l.shortcutName || '',
-            shortcutPath: l.shortcutPath || ''
+            shortcutPath: l.shortcutPath || '',
+            icon: l.icon || ''
         }));
         renderUngroupedLinks();
     }
