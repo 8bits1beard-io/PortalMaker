@@ -2245,10 +2245,17 @@ function downloadHTML() {
 
 // Import existing landing page
 function importStartPage(input) {
+    console.log('importStartPage called', input);
     const file = input.files[0];
+    console.log('Selected file:', file);
     if (!file) return;
 
     const reader = new FileReader();
+    reader.onerror = function(e) {
+        console.error('FileReader error:', e);
+        alert('Error reading file. Please try again.');
+        input.value = '';
+    };
     reader.onload = function(e) {
         const html = e.target.result;
 
