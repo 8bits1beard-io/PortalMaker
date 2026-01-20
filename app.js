@@ -257,11 +257,9 @@ function validatePositions() {
         positions.push({ element: 'dateTime', position: dateTimePos });
     }
 
-    // Check location number position
-    const showNetworkIdentifier = document.getElementById('showNetworkIdentifier').checked;
-    const networkIdentifierPos = document.getElementById('networkIdentifierPosition').value;
-    if (showNetworkIdentifier && cornerPositions.includes(networkIdentifierPos)) {
-        positions.push({ element: 'networkIdentifier', position: networkIdentifierPos });
+    // Check network identifier position
+    if (showNetworkIdentifier && cornerPositions.includes(networkIdentifierPosition)) {
+        positions.push({ element: 'networkIdentifier', position: networkIdentifierPosition });
     }
 
     // Check side logo position
