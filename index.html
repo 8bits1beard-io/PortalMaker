@@ -106,6 +106,9 @@
                         <p class="template-import-note">Load a previously generated start page to edit.</p>
                     </div>
                     <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <!-- CONTENT SECTION -->
+                    <div class="section-label">Content</div>
                     <div class="form-group">
                         <label for="pageTitle">Page Title <small>(browser tab)</small></label>
                         <input type="text" id="pageTitle" value="Quick Links" oninput="debouncedUpdatePreview()">
@@ -116,6 +119,89 @@
                         <input type="text" id="greeting" value="" oninput="debouncedUpdatePreview()">
                     </div>
 
+                    <div class="form-group">
+                        <label for="greetingFontSize">Greeting Font Size</label>
+                        <div class="slider-row">
+                            <input type="range" id="greetingFontSize" min="1.5" max="5" step="0.25" value="3" oninput="updateSliderValue(this); debouncedUpdatePreview()">
+                            <span id="greetingFontSizeValue" class="slider-value">3rem</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="greetingSpacing">Greeting Spacing</label>
+                        <div class="slider-row">
+                            <input type="range" id="greetingSpacing" min="0" max="5" step="0.25" value="2.5" oninput="updateSliderValue(this); debouncedUpdatePreview()">
+                            <span id="greetingSpacingValue" class="slider-value">2.5rem</span>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <!-- MAIN LOGO SECTION -->
+                    <div class="section-label">Main Logo</div>
+                    <div class="form-group">
+                        <label for="topLogoUrl">Logo URL <small>(above greeting text)</small></label>
+                        <div class="logo-input-row">
+                            <input type="url" id="topLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
+                            <label for="topLogoUpload" class="btn btn-secondary btn-sm upload-btn">
+                                Upload SVG
+                                <input type="file" id="topLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('top', this)" class="visually-hidden">
+                            </label>
+                            <button type="button" class="btn btn-sm" onclick="clearLogo('top')" aria-label="Clear main logo" title="Clear">&#10005;</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topLogoWidth">Logo Width</label>
+                        <div class="slider-row">
+                            <input type="range" id="topLogoWidth" min="100" max="600" step="10" value="360" oninput="updateSliderValue(this); debouncedUpdatePreview()">
+                            <span id="topLogoWidthValue" class="slider-value">360px</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="topLogoSpacing">Logo Spacing</label>
+                        <div class="slider-row">
+                            <input type="range" id="topLogoSpacing" min="0" max="4" step="0.25" value="1.5" oninput="updateSliderValue(this); debouncedUpdatePreview()">
+                            <span id="topLogoSpacingValue" class="slider-value">1.5rem</span>
+                        </div>
+                    </div>
+
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <!-- SMALL LOGO SECTION -->
+                    <div class="section-label">Small Logo</div>
+                    <div class="form-group">
+                        <label for="sideLogoUrl">Logo URL</label>
+                        <div class="logo-input-row">
+                            <input type="url" id="sideLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
+                            <label for="sideLogoUpload" class="btn btn-secondary btn-sm upload-btn">
+                                Upload SVG
+                                <input type="file" id="sideLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('side', this)" class="visually-hidden">
+                            </label>
+                            <button type="button" class="btn btn-sm" onclick="clearLogo('side')" aria-label="Clear small logo" title="Clear">&#10005;</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="sideLogoPositionGroup" style="display: none;">
+                        <label for="sideLogoPosition">Position</label>
+                        <select id="sideLogoPosition" onchange="validatePositions(); updatePreview()">
+                            <option value="left" selected>Left of greeting</option>
+                            <option value="right">Right of greeting</option>
+                            <option value="top-left">Top Left</option>
+                            <option value="top-center">Top Center</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="bottom-center">Bottom Center</option>
+                            <option value="bottom-right">Bottom Right</option>
+                        </select>
+                        <small id="sideLogoPositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
+                    </div>
+
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <!-- CORNER OVERLAYS SECTION -->
+                    <div class="section-label">Corner Overlays</div>
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="showComputerName" onchange="updatePreview()">
@@ -212,45 +298,10 @@
                         <small id="dateTimePositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
                     </div>
 
-                    <div class="form-group">
-                        <label for="topLogoUrl">Main Logo <small>(above greeting text)</small></label>
-                        <div class="logo-input-row">
-                            <input type="url" id="topLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
-                            <label for="topLogoUpload" class="btn btn-secondary btn-sm upload-btn">
-                                Upload SVG
-                                <input type="file" id="topLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('top', this)" class="visually-hidden">
-                            </label>
-                            <button type="button" class="btn btn-sm" onclick="clearLogo('top')" aria-label="Clear main logo" title="Clear">&#10005;</button>
-                        </div>
-                    </div>
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
 
-                    <div class="form-group">
-                        <label for="sideLogoUrl">Small Logo</label>
-                        <div class="logo-input-row">
-                            <input type="url" id="sideLogoUrl" value="" placeholder="https://example.com/logo.png" oninput="debouncedUpdatePreview()">
-                            <label for="sideLogoUpload" class="btn btn-secondary btn-sm upload-btn">
-                                Upload SVG
-                                <input type="file" id="sideLogoUpload" accept=".svg,image/svg+xml" onchange="handleLogoUpload('side', this)" class="visually-hidden">
-                            </label>
-                            <button type="button" class="btn btn-sm" onclick="clearLogo('side')" aria-label="Clear small logo" title="Clear">&#10005;</button>
-                        </div>
-                    </div>
-
-                    <div class="form-group" id="sideLogoPositionGroup" style="display: none;">
-                        <label for="sideLogoPosition">Small logo position</label>
-                        <select id="sideLogoPosition" onchange="validatePositions(); updatePreview()">
-                            <option value="left" selected>Left of greeting</option>
-                            <option value="right">Right of greeting</option>
-                            <option value="top-left">Top Left</option>
-                            <option value="top-center">Top Center</option>
-                            <option value="top-right">Top Right</option>
-                            <option value="bottom-left">Bottom Left</option>
-                            <option value="bottom-center">Bottom Center</option>
-                            <option value="bottom-right">Bottom Right</option>
-                        </select>
-                        <small id="sideLogoPositionWarning" class="position-warning" style="display: none; color: var(--danger);">Position conflicts with another element</small>
-                    </div>
-
+                    <!-- FOOTER SECTION -->
+                    <div class="section-label">Footer</div>
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="showFooter" onchange="updatePreview()">
@@ -263,10 +314,14 @@
                         <input type="text" id="footerText" value="" oninput="debouncedUpdatePreview()">
                     </div>
 
+                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <!-- AUTO-REDIRECT SECTION -->
+                    <div class="section-label">Auto-Redirect</div>
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="enableAutoRefresh" onchange="updatePreview()">
-                            <label for="enableAutoRefresh">Auto-redirect to another page</label>
+                            <label for="enableAutoRefresh">Enable auto-redirect</label>
                         </div>
                     </div>
 
@@ -281,16 +336,6 @@
                                 <input type="url" id="autoRefreshUrl" value="" placeholder="https://example.com" oninput="debouncedUpdatePreview()" onblur="validateUrlInput(this)">
                             </div>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="scriptName">Script Name <small>(used in filename)</small></label>
-                        <input type="text" id="scriptName" value="MyLandingPage" placeholder="MyLandingPage" oninput="debouncedUpdatePreview()">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="destinationPath">Destination Path <small>(where landing page will be saved)</small></label>
-                        <input type="text" id="destinationPath" value="C:\ProgramData\LandingPage\index.html" placeholder="C:\ProgramData\LandingPage\index.html">
                     </div>
                 </fieldset>
                 </div>
@@ -383,6 +428,23 @@
                 <div id="tab-export" class="tab-panel" role="tabpanel">
                 <section class="output-section" aria-labelledby="output-heading">
                     <h3 id="output-heading" class="visually-hidden">Download Options</h3>
+
+                    <!-- Deployment Settings -->
+                    <div class="section-label" style="margin-left: 1rem;">Deployment Settings</div>
+                    <div style="padding: 0 1rem 1rem;">
+                        <div class="form-group">
+                            <label for="scriptName">Script Name <small>(used in filename)</small></label>
+                            <input type="text" id="scriptName" value="MyLandingPage" placeholder="MyLandingPage" oninput="debouncedUpdatePreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="destinationPath">Destination Path <small>(where landing page will be saved)</small></label>
+                            <input type="text" id="destinationPath" value="C:\ProgramData\LandingPage\index.html" placeholder="C:\ProgramData\LandingPage\index.html">
+                        </div>
+                    </div>
+
+                    <hr style="margin: 0 1rem 1rem; border: none; border-top: 1px solid var(--border);">
+
                     <div class="output-actions" style="flex-direction: column; align-items: center;">
                         <button type="button" class="btn btn-generate" onclick="downloadScript()">
                             Download PowerShell Script (Recommended)
