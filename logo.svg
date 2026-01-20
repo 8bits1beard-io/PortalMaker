@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 100" width="400" height="100">
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f472b6"/>
+      <stop offset="100%" style="stop-color:#c084fc"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Icon: Browser window with design cursor -->
+  <g transform="translate(10, 10)">
+    <!-- Browser frame -->
+    <rect x="0" y="0" width="70" height="55" rx="6" ry="6" fill="url(#brandGradient)"/>
+    
+    <!-- Browser header bar -->
+    <rect x="0" y="0" width="70" height="14" rx="6" ry="6" fill="url(#brandGradient)"/>
+    <rect x="0" y="8" width="70" height="6" fill="url(#brandGradient)"/>
+    
+    <!-- Browser dots -->
+    <circle cx="10" cy="7" r="2.5" fill="#fff" opacity="0.9"/>
+    <circle cx="18" cy="7" r="2.5" fill="#fff" opacity="0.7"/>
+    <circle cx="26" cy="7" r="2.5" fill="#fff" opacity="0.5"/>
+    
+    <!-- Content area -->
+    <rect x="5" y="18" width="60" height="32" rx="2" fill="#fff"/>
+    
+    <!-- Landing page elements inside -->
+    <rect x="9" y="22" width="24" height="4" rx="1" fill="#e0e7ff"/>
+    <rect x="9" y="29" width="52" height="2" rx="1" fill="#c7d2fe"/>
+    <rect x="9" y="33" width="45" height="2" rx="1" fill="#c7d2fe"/>
+    <rect x="9" y="37" width="38" height="2" rx="1" fill="#c7d2fe"/>
+    <rect x="9" y="43" width="16" height="5" rx="2" fill="url(#accentGradient)"/>
+    
+    <!-- Design cursor -->
+    <g transform="translate(48, 35)">
+      <path d="M0 0 L0 16 L4.5 12 L8 19 L11 17.5 L7.5 11 L13 11 Z" fill="#1e1b4b" stroke="#fff" stroke-width="1.5"/>
+    </g>
+  </g>
+  
+  <!-- Decorative blocks suggesting drag-and-drop -->
+  <g transform="translate(58, 68)" opacity="0.6">
+    <rect x="0" y="0" width="8" height="8" rx="1.5" fill="#8b5cf6" transform="rotate(-12)"/>
+    <rect x="10" y="2" width="6" height="6" rx="1" fill="#f472b6" transform="rotate(8)"/>
+  </g>
+  
+  <!-- Text: Landing Page Studio -->
+  <g transform="translate(95, 0)">
+    <!-- "Landing Page" -->
+    <text x="0" y="42" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="28" font-weight="700" fill="#1e1b4b">
+      Landing Page
+    </text>
+    <!-- "Studio" with gradient -->
+    <text x="0" y="72" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="28" font-weight="700" fill="url(#brandGradient)">
+      Studio
+    </text>
+  </g>
+</svg>
