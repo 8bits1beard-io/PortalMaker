@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.11';
+const APP_VERSION = '1.0.12';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -159,7 +159,9 @@ const APP_PRESETS = [
     { key: 'remote-desktop', name: 'Remote Desktop', path: 'C:\\Windows\\System32\\mstsc.exe', args: '' },
     { key: 'device-manager', name: 'Device Manager', path: 'C:\\Windows\\System32\\devmgmt.msc', args: '' },
     { key: 'disk-management', name: 'Disk Management', path: 'C:\\Windows\\System32\\diskmgmt.msc', args: '' },
-    { key: 'event-viewer', name: 'Event Viewer', path: 'C:\\Windows\\System32\\eventvwr.msc', args: '' }
+    { key: 'event-viewer', name: 'Event Viewer', path: 'C:\\Windows\\System32\\eventvwr.msc', args: '' },
+    { key: 'on-screen-keyboard', name: 'On-Screen Keyboard', path: 'C:\\Windows\\System32\\osk.exe', args: '' },
+    { key: 'print-queue', name: 'Print Queue', path: 'C:\\Windows\\explorer.exe', args: 'shell:PrintersFolder' }
 ];
 
 // State management
