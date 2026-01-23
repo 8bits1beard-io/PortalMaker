@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.15';
+const APP_VERSION = '1.1.0';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },

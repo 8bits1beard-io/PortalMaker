@@ -7,20 +7,26 @@
 ## Features
 
 - **Visual Editor** - Configure your landing page without writing code
-- **Tabbed Interface** - Organized configuration in Page, Theme, Links, and Export tabs
+- **Tabbed Interface** - Organized configuration in Layout, Colors, Links, and Export tabs
 - **Live Preview** - See changes in real-time as you edit
 - **Auto-Save** - Your work is automatically saved to browser storage
 - **Dual Logo Support** - Main logo above greeting, small logo with flexible corner/greeting positioning
 - **SVG Upload** - Upload SVG files or reference hosted logos
 - **Color Themes** - 20 preset WCAG-compliant themes plus custom colors
+- **Advanced Colors** - Override individual colors (background, text, links, hover states)
+- **Icon Library** - 40+ built-in SVG icons for groups and links
+- **Link Layouts** - Cards, List, or Grid display with configurable columns
+- **Button Styles** - Rounded, Square, or Text-only link buttons
+- **Announcement Banner** - Optional banner with Info/Warning/Urgent styles
+- **Popup Windows** - Open links in popup windows for kiosk navigation
 - **Drag-and-Drop** - Reorder groups and links by dragging
 - **Local App Shortcuts** - Create .lnk shortcuts for local applications
 - **Quick Start Templates** - Load ready-made kiosk layouts
 - **App Presets** - Pick common Windows tools with prefilled paths
 - **Auto-Redirect** - Optionally redirect to another page after a delay
-- **Import/Export** - Import previously created landing pages for editing
+- **Import/Export** - Save and load configurations as JSON
 - **WCAG Compliant** - Generated pages meet accessibility standards
-- **Enterprise Ready** - PowerShell scripts for Intune/SCCM deployment
+- **Enterprise Ready** - PowerShell scripts for Intune/SCCM/Win32 deployment
 
 ## Quick Start
 
@@ -32,7 +38,7 @@
 
 ## Configuration
 
-### Page Settings
+### Layout Settings
 
 | Setting | Description |
 |---------|-------------|
@@ -44,8 +50,12 @@
 | Date/Time | Optional live clock (ISO 8601) |
 | Footer | Optional footer text |
 | Auto-Redirect | Redirect to another URL after specified seconds |
+| Announcement Banner | Optional banner with title, message, and style (Info/Warning/Urgent) |
+| Link Layout | Cards (default), List, or Grid display |
+| Button Style | Rounded (default), Square, or Text-only |
+| Popup Windows | Open links in popup window instead of navigating away |
 | Script Name | Name used in the PowerShell script filename |
-| Destination Path | Where the landing page saves |
+| Destination Path | Where the landing page saves on target machines |
 
 ### Color Themes
 
