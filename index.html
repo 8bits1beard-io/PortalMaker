@@ -400,6 +400,42 @@
                         </select>
                     </div>
                 </fieldset>
+
+                <hr>
+                <!-- POPUP WINDOW SETTINGS -->
+                <fieldset>
+                    <legend>Link Behavior</legend>
+                    <div class="form-group">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="openLinksInPopup" onchange="updatePreview()">
+                            <label for="openLinksInPopup">Open links in popup window</label>
+                        </div>
+                        <small class="form-hint">Links open in a new window. Close the window to return to the landing page.</small>
+                    </div>
+                    <div id="popupOptionsGroup" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="popupWidth">Popup Width</label>
+                                <input type="number" id="popupWidth" value="1200" min="400" max="3840" oninput="debouncedUpdatePreview()">
+                            </div>
+                            <div class="form-group">
+                                <label for="popupHeight">Popup Height</label>
+                                <input type="number" id="popupHeight" value="800" min="300" max="2160" oninput="debouncedUpdatePreview()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="popupAutoClose" onchange="updatePreview()">
+                                <label for="popupAutoClose">Auto-close after inactivity</label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="popupAutoCloseDelayGroup" style="display: none;">
+                            <label for="popupAutoCloseDelay">Close after (seconds)</label>
+                            <input type="number" id="popupAutoCloseDelay" value="300" min="30" max="3600" oninput="debouncedUpdatePreview()">
+                            <small class="form-hint">Popup closes after this many seconds of no mouse/keyboard activity</small>
+                        </div>
+                    </div>
+                </fieldset>
                 </div>
 
                 <!-- Theme Tab -->

@@ -29,7 +29,13 @@ const DEFAULTS = {
     bannerEnabled: false,
     bannerTitle: '',
     bannerMessage: '',
-    bannerStyle: 'info'
+    bannerStyle: 'info',
+    // Popup window settings
+    openLinksInPopup: false,
+    popupWidth: '1200',
+    popupHeight: '800',
+    popupAutoClose: false,
+    popupAutoCloseDelay: '300'
 };
 
 // Banner style colors
@@ -1009,7 +1015,13 @@ function saveState() {
             bannerEnabled: document.getElementById('bannerEnabled').checked,
             bannerTitle: document.getElementById('bannerTitle').value,
             bannerMessage: document.getElementById('bannerMessage').value,
-            bannerStyle: document.getElementById('bannerStyle').value
+            bannerStyle: document.getElementById('bannerStyle').value,
+            // Popup window settings
+            openLinksInPopup: document.getElementById('openLinksInPopup').checked,
+            popupWidth: document.getElementById('popupWidth').value,
+            popupHeight: document.getElementById('popupHeight').value,
+            popupAutoClose: document.getElementById('popupAutoClose').checked,
+            popupAutoCloseDelay: document.getElementById('popupAutoCloseDelay').value
         }
     };
     try {
@@ -1109,6 +1121,13 @@ function loadState() {
                 document.getElementById('bannerTitle').value = state.settings.bannerTitle || '';
                 document.getElementById('bannerMessage').value = state.settings.bannerMessage || '';
                 document.getElementById('bannerStyle').value = state.settings.bannerStyle || DEFAULTS.bannerStyle;
+
+                // Restore popup window settings
+                document.getElementById('openLinksInPopup').checked = state.settings.openLinksInPopup || false;
+                document.getElementById('popupWidth').value = state.settings.popupWidth || DEFAULTS.popupWidth;
+                document.getElementById('popupHeight').value = state.settings.popupHeight || DEFAULTS.popupHeight;
+                document.getElementById('popupAutoClose').checked = state.settings.popupAutoClose || false;
+                document.getElementById('popupAutoCloseDelay').value = state.settings.popupAutoCloseDelay || DEFAULTS.popupAutoCloseDelay;
 
                 // Restore custom color inputs if custom theme
                 if (selectedTheme === 'custom') {
@@ -1862,6 +1881,13 @@ function generateHTML(useComputerNameVariable = false) {
     const bannerStyle = document.getElementById('bannerStyle').value || DEFAULTS.bannerStyle;
     const bannerColors = BANNER_STYLES[bannerStyle] || BANNER_STYLES.info;
 
+    // Popup window settings
+    const openLinksInPopup = document.getElementById('openLinksInPopup').checked;
+    const popupWidth = document.getElementById('popupWidth').value || DEFAULTS.popupWidth;
+    const popupHeight = document.getElementById('popupHeight').value || DEFAULTS.popupHeight;
+    const popupAutoClose = document.getElementById('popupAutoClose').checked;
+    const popupAutoCloseDelay = document.getElementById('popupAutoCloseDelay').value || DEFAULTS.popupAutoCloseDelay;
+
     const colors = getActiveColors();
     const autoRefreshValid = autoRefreshUrl && isValidUrl(autoRefreshUrl);
     const shouldAutoRefresh = enableAutoRefresh && autoRefreshValid;
@@ -1893,7 +1919,8 @@ function generateHTML(useComputerNameVariable = false) {
                             ? (link.shortcutPath ? encodeURI(link.shortcutPath) : './' + encodeURIComponent(link.shortcutName || link.name + '.lnk'))
                             : escapeHtml(link.url);
                         const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
-                        return `<li><a href="${href}" class="link-button style-${buttonStyle}">${iconHtml}${escapeHtml(link.name)}</a></li>`;
+                        const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
+                        return `<li><a href="${href}" class="link-button style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
                 </ul>
             </section>`;
@@ -1910,7 +1937,8 @@ function generateHTML(useComputerNameVariable = false) {
                         ? (link.shortcutPath ? encodeURI(link.shortcutPath) : './' + encodeURIComponent(link.shortcutName || link.name + '.lnk'))
                         : escapeHtml(link.url);
                     const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
-                    return `<a href="${href}" class="link-button standalone style-${buttonStyle}">${iconHtml}${escapeHtml(link.name)}</a>`;
+                    const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
+                    return `<a href="${href}" class="link-button standalone style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
                 }).join('')}
             </div>`;
     }
@@ -2613,6 +2641,73 @@ ${showDateTime ? `
         setInterval(updateDateTime, 1000);
     <` + `/script>
 ` : ''}
+${openLinksInPopup ? `
+    <script>
+        function openPopup(url) {
+            const width = ${popupWidth};
+            const height = ${popupHeight};
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+            const features = 'width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',resizable=yes,scrollbars=yes,status=yes,toolbar=yes,menubar=no,location=yes';
+            const popup = window.open(url, '_blank', features);
+            ${popupAutoClose ? `
+            if (popup) {
+                // Inject auto-close script into popup
+                const autoCloseDelay = ${popupAutoCloseDelay} * 1000;
+                const checkInterval = setInterval(function() {
+                    if (popup.closed) {
+                        clearInterval(checkInterval);
+                        return;
+                    }
+                    try {
+                        // Try to inject the auto-close script
+                        if (popup.document && popup.document.body && !popup.autoCloseInjected) {
+                            popup.autoCloseInjected = true;
+                            popup.lastActivity = Date.now();
+
+                            // Track activity
+                            popup.document.addEventListener('mousemove', function() { popup.lastActivity = Date.now(); });
+                            popup.document.addEventListener('keydown', function() { popup.lastActivity = Date.now(); });
+                            popup.document.addEventListener('click', function() { popup.lastActivity = Date.now(); });
+                            popup.document.addEventListener('scroll', function() { popup.lastActivity = Date.now(); });
+
+                            // Create countdown overlay
+                            const overlay = popup.document.createElement('div');
+                            overlay.id = 'auto-close-overlay';
+                            overlay.style.cssText = 'display:none;position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.8);color:white;padding:15px 20px;border-radius:8px;font-family:sans-serif;font-size:14px;z-index:999999;';
+                            overlay.innerHTML = 'Closing in <span id="countdown"></span>s - <a href="#" onclick="window.lastActivity=Date.now();this.parentElement.style.display=\\'none\\';return false;" style="color:#fff;text-decoration:underline;">Stay open</a>';
+                            popup.document.body.appendChild(overlay);
+
+                            // Check for inactivity
+                            setInterval(function() {
+                                const elapsed = Date.now() - popup.lastActivity;
+                                const remaining = Math.ceil((autoCloseDelay - elapsed) / 1000);
+
+                                if (remaining <= 30 && remaining > 0) {
+                                    overlay.style.display = 'block';
+                                    overlay.querySelector('#countdown').textContent = remaining;
+                                } else {
+                                    overlay.style.display = 'none';
+                                }
+
+                                if (elapsed >= autoCloseDelay) {
+                                    popup.close();
+                                }
+                            }, 1000);
+                        }
+                    } catch (e) {
+                        // Cross-origin - can't inject, just use simple timeout
+                        clearInterval(checkInterval);
+                        setTimeout(function() {
+                            if (!popup.closed) popup.close();
+                        }, autoCloseDelay);
+                    }
+                }, 500);
+            }
+            ` : ''}
+        }
+    <` + `/script>
+` : ''}
     <script type="application/json" id="landing-page-studio-config">
         ${configJson.replace(/</g, '\\u003c')}
     </script>
@@ -2707,6 +2802,14 @@ function updatePreview() {
     // Toggle grid columns visibility
     const linkLayout = document.getElementById('linkLayout').value;
     document.getElementById('gridColumnsGroup').style.display = linkLayout === 'grid' ? 'block' : 'none';
+
+    // Toggle popup options visibility
+    const openLinksInPopup = document.getElementById('openLinksInPopup').checked;
+    document.getElementById('popupOptionsGroup').style.display = openLinksInPopup ? 'block' : 'none';
+
+    // Toggle auto-close delay visibility
+    const popupAutoClose = document.getElementById('popupAutoClose').checked;
+    document.getElementById('popupAutoCloseDelayGroup').style.display = popupAutoClose ? 'block' : 'none';
 
     // Save state to localStorage
     saveState();
@@ -3214,6 +3317,13 @@ function applyImportedConfig(config) {
         document.getElementById('bannerTitle').value = config.settings.bannerTitle || '';
         document.getElementById('bannerMessage').value = config.settings.bannerMessage || '';
         document.getElementById('bannerStyle').value = config.settings.bannerStyle || DEFAULTS.bannerStyle;
+
+        // Popup window settings
+        document.getElementById('openLinksInPopup').checked = config.settings.openLinksInPopup || false;
+        document.getElementById('popupWidth').value = config.settings.popupWidth || DEFAULTS.popupWidth;
+        document.getElementById('popupHeight').value = config.settings.popupHeight || DEFAULTS.popupHeight;
+        document.getElementById('popupAutoClose').checked = config.settings.popupAutoClose || false;
+        document.getElementById('popupAutoCloseDelay').value = config.settings.popupAutoCloseDelay || DEFAULTS.popupAutoCloseDelay;
     }
 
     // Apply theme
@@ -3365,6 +3475,13 @@ function resetAll() {
     document.getElementById('bannerTitle').value = '';
     document.getElementById('bannerMessage').value = '';
     document.getElementById('bannerStyle').value = DEFAULTS.bannerStyle;
+
+    // Reset popup window settings
+    document.getElementById('openLinksInPopup').checked = false;
+    document.getElementById('popupWidth').value = DEFAULTS.popupWidth;
+    document.getElementById('popupHeight').value = DEFAULTS.popupHeight;
+    document.getElementById('popupAutoClose').checked = false;
+    document.getElementById('popupAutoCloseDelay').value = DEFAULTS.popupAutoCloseDelay;
 
     // Reset custom color inputs
     document.getElementById('customPrimary').value = DEFAULTS.customColors.primary;
