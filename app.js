@@ -282,17 +282,12 @@ function updateSliderValue(slider) {
 
 // Tab switching
 function switchTab(tabName) {
-    // Update buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
+    // Update step buttons
+    document.querySelectorAll('.step-btn').forEach(btn => {
         const isActive = btn.getAttribute('aria-controls') === 'tab-' + tabName;
         btn.classList.toggle('active', isActive);
         btn.setAttribute('aria-selected', isActive);
         btn.setAttribute('tabindex', isActive ? '0' : '-1');
-    });
-    // Update step indicator
-    document.querySelectorAll('.step-indicator .step').forEach(step => {
-        const isActive = step.dataset.tab === tabName;
-        step.classList.toggle('active', isActive);
     });
     // Update panels
     document.querySelectorAll('.tab-panel').forEach(panel => {

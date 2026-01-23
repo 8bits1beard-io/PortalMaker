@@ -82,20 +82,26 @@
             <h2 id="config-heading" class="panel-header">Configuration</h2>
             <div class="panel-body editor-scroll">
                 <!-- Tab Navigation -->
-                <div class="step-indicator" role="presentation" aria-hidden="true">
-                    <span class="step active" data-tab="page"><span class="step-number">1</span> Layout</span>
-                    <span class="step-arrow">→</span>
-                    <span class="step" data-tab="theme"><span class="step-number">2</span> Colors</span>
-                    <span class="step-arrow">→</span>
-                    <span class="step" data-tab="links"><span class="step-number">3</span> Links</span>
-                    <span class="step-arrow">→</span>
-                    <span class="step" data-tab="export"><span class="step-number">4</span> Export</span>
-                </div>
-                <nav class="tab-nav" role="tablist">
-                    <button type="button" class="tab-btn active" role="tab" aria-selected="true" aria-controls="tab-page" tabindex="0" onclick="switchTab('page')" onkeydown="handleTabKeydown(event)">Layout</button>
-                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-theme" tabindex="-1" onclick="switchTab('theme')" onkeydown="handleTabKeydown(event)">Colors</button>
-                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-links" tabindex="-1" onclick="switchTab('links')" onkeydown="handleTabKeydown(event)">Links</button>
-                    <button type="button" class="tab-btn" role="tab" aria-selected="false" aria-controls="tab-export" tabindex="-1" onclick="switchTab('export')" onkeydown="handleTabKeydown(event)">Export</button>
+                <nav class="step-nav" role="tablist">
+                    <button type="button" class="step-btn active" role="tab" aria-selected="true" aria-controls="tab-page" tabindex="0" onclick="switchTab('page')" onkeydown="handleTabKeydown(event)">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Layout</span>
+                    </button>
+                    <span class="step-arrow" aria-hidden="true">→</span>
+                    <button type="button" class="step-btn" role="tab" aria-selected="false" aria-controls="tab-theme" tabindex="-1" onclick="switchTab('theme')" onkeydown="handleTabKeydown(event)">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Colors</span>
+                    </button>
+                    <span class="step-arrow" aria-hidden="true">→</span>
+                    <button type="button" class="step-btn" role="tab" aria-selected="false" aria-controls="tab-links" tabindex="-1" onclick="switchTab('links')" onkeydown="handleTabKeydown(event)">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Links</span>
+                    </button>
+                    <span class="step-arrow" aria-hidden="true">→</span>
+                    <button type="button" class="step-btn" role="tab" aria-selected="false" aria-controls="tab-export" tabindex="-1" onclick="switchTab('export')" onkeydown="handleTabKeydown(event)">
+                        <span class="step-number">4</span>
+                        <span class="step-label">Export</span>
+                    </button>
                 </nav>
 
                 <!-- Page Tab -->

@@ -1194,81 +1194,92 @@ footer {
     white-space: nowrap;
 }
 
-/* Tab styles */
-.step-indicator {
+/* Step Navigation (combined tabs + steps) */
+.step-nav {
     display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    margin-bottom: 0.75rem;
-}
-
-.step-indicator .step {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-}
-
-.step-indicator .step-number {
-    display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.75rem;
-    padding: 0.1rem 0.45rem;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    background: var(--bg-input);
-    color: var(--primary);
-    font-weight: 600;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
 }
 
-.step-indicator .step.active {
-    color: var(--text-primary);
-}
-
-.step-indicator .step.active .step-number {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: var(--white);
-}
-
-.step-indicator .step-arrow {
-    color: var(--text-secondary);
-}
-
-.tab-nav {
-    display: flex;
-    border-bottom: 2px solid var(--border);
-    margin-bottom: 1rem;
-    gap: 0;
-}
-
-.tab-btn {
-    flex: 1;
-    padding: 0.75rem 0.5rem;
+.step-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.75rem;
     background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    margin-bottom: -2px;
-    font-size: 0.875rem;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    font-size: 0.8rem;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all 0.2s;
 }
 
-.tab-btn:hover {
+.step-btn:hover {
     color: var(--primary);
     background: var(--bg-input);
+    border-color: var(--border);
 }
 
-.tab-btn.active {
+.step-btn:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.step-btn .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--bg-input);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    transition: all 0.2s;
+}
+
+.step-btn:hover .step-number {
+    border-color: var(--primary);
     color: var(--primary);
-    border-bottom-color: var(--primary);
+}
+
+.step-btn.active {
+    color: var(--primary);
+}
+
+.step-btn.active .step-number {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--white);
+}
+
+.step-arrow {
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    opacity: 0.5;
+}
+
+/* Hide labels on small screens, show just numbers */
+@media (max-width: 480px) {
+    .step-nav {
+        gap: 0.25rem;
+    }
+    .step-btn {
+        padding: 0.4rem;
+    }
+    .step-btn .step-label {
+        display: none;
+    }
 }
 
 .tab-panel {
