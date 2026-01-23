@@ -72,8 +72,15 @@
           </g>
         </svg>
         <h1 class="visually-hidden">Landing Page Studio</h1>
-        <span id="saveIndicator" class="save-indicator" aria-live="polite"></span>
-        <button type="button" class="btn btn-danger btn-sm header-reset" onclick="resetAll()" aria-label="Reset everything">Reset</button>
+        <div class="header-actions">
+            <span id="saveIndicator" class="save-indicator" aria-live="polite"></span>
+            <label for="importFileHeader" class="btn btn-secondary btn-sm header-btn" style="cursor: pointer;">
+                Load
+                <input type="file" id="importFileHeader" accept=".json,.html,.htm" onchange="importConfiguration(this)" class="visually-hidden">
+            </label>
+            <button type="button" class="btn btn-secondary btn-sm header-btn" onclick="exportConfiguration()">Save</button>
+            <button type="button" class="btn btn-danger btn-sm header-btn" onclick="resetAll()" aria-label="Reset everything">Reset</button>
+        </div>
     </header>
 
     <main id="main-content" class="container" role="main">
@@ -108,14 +115,6 @@
                 <div id="tab-page" class="tab-panel active" role="tabpanel">
                 <fieldset style="border: none; padding: 0; margin: 0;">
                     <legend class="visually-hidden">Page Settings</legend>
-                    <div class="template-import" aria-label="Import configuration">
-                        <label for="importFile" class="btn btn-secondary btn-sm" style="cursor: pointer;">
-                            Load Configuration
-                            <input type="file" id="importFile" accept=".json,.html,.htm" onchange="importConfiguration(this)" class="visually-hidden">
-                        </label>
-                        <p class="template-import-note">Load a saved configuration or legacy HTML file.</p>
-                    </div>
-                    <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
 
                     <!-- CONTENT SECTION -->
                     <div class="section-label">Content</div>
@@ -442,6 +441,21 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <hr>
+                <!-- DEPLOYMENT SETTINGS -->
+                <fieldset>
+                    <legend>Deployment</legend>
+                    <div class="form-group">
+                        <label for="scriptName">Script Name <small>(used in filename)</small></label>
+                        <input type="text" id="scriptName" value="MyLandingPage" placeholder="MyLandingPage" oninput="debouncedUpdatePreview()">
+                    </div>
+                    <div class="form-group">
+                        <label for="destinationPath">Destination Path</label>
+                        <input type="text" id="destinationPath" value="C:\ProgramData\LandingPage\index.html" placeholder="C:\ProgramData\LandingPage\index.html">
+                        <small class="form-hint">Where the landing page HTML file will be saved on target machines</small>
+                    </div>
+                </fieldset>
                 </div>
 
                 <!-- Theme Tab -->
@@ -544,44 +558,12 @@
                 <section class="output-section" aria-labelledby="output-heading">
                     <h3 id="output-heading" class="visually-hidden">Download Options</h3>
 
-                    <!-- Deployment Settings -->
-                    <div class="section-label" style="margin-left: 1rem;">Deployment Settings</div>
-                    <div style="padding: 0 1rem 1rem;">
-                        <div class="form-group">
-                            <label for="scriptName">Script Name <small>(used in filename)</small></label>
-                            <input type="text" id="scriptName" value="MyLandingPage" placeholder="MyLandingPage" oninput="debouncedUpdatePreview()">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="destinationPath">Destination Path <small>(where landing page will be saved)</small></label>
-                            <input type="text" id="destinationPath" value="C:\ProgramData\LandingPage\index.html" placeholder="C:\ProgramData\LandingPage\index.html">
-                        </div>
-                    </div>
-
-                    <hr style="margin: 0 1rem 1rem; border: none; border-top: 1px solid var(--border);">
-
-                    <div class="output-actions" style="flex-direction: column; align-items: center;">
+                    <div class="output-actions" style="flex-direction: column; align-items: center; padding-top: 1rem;">
                         <button type="button" class="btn btn-generate" onclick="downloadScript()">
                             Download PowerShell Script
                         </button>
                         <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0;">
                             Captures computer name at runtime. Deploy via Intune/SCCM.
-                        </p>
-
-                        <hr style="width: 100%; margin: 1rem 0; border: none; border-top: 1px solid var(--border);">
-
-                        <div class="section-label">Configuration</div>
-                        <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportConfiguration()">
-                                Save Configuration
-                            </button>
-                            <label for="loadConfigFile" class="btn btn-secondary btn-sm" style="cursor: pointer; margin: 0;">
-                                Load Configuration
-                                <input type="file" id="loadConfigFile" accept=".json,.html,.htm" onchange="importConfiguration(this)" class="visually-hidden">
-                            </label>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0.5rem 0 0 0;">
-                            Save or load your settings as a JSON file.
                         </p>
                     </div>
                 </section>

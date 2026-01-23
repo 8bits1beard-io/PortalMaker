@@ -75,16 +75,23 @@ header h1 {
     font-weight: 600;
 }
 
-.header-reset {
-    margin-left: 0.75rem;
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+}
+
+.header-btn {
+    padding: 0.4rem 0.75rem;
 }
 
 .save-indicator {
-    margin-left: auto;
     font-size: 0.875rem;
     color: var(--accent);
     opacity: 0;
     transition: opacity 0.3s ease;
+    margin-right: 0.5rem;
 }
 
 .save-indicator.visible {
