@@ -18,11 +18,11 @@ Open `index.html` directly in a browser. No build step required.
 
 ### Files
 - **index.html** - UI structure with 4-tab interface (Layout, Colors, Links, Export)
-- **app.js** - Core logic, state management, HTML/PowerShell generation (~2600 lines)
+- **app.js** - Core logic, state management, HTML/PowerShell generation (~3500 lines)
 - **styles.css** - Responsive styling with CSS variables, accessibility support
 
 ### State Management
-All state persists to `localStorage` under key `LANDING_PAGE_STUDIO_STATE`. Auto-saves with 150ms debounce on changes.
+All state persists to `localStorage` under key `startPageStudioState`. Auto-saves with 150ms debounce on changes.
 
 ```javascript
 // Key state structures
@@ -30,21 +30,26 @@ let groups = [];           // Link groups with nested links array
 let ungroupedLinks = [];   // Standalone links
 let groupIdCounter = 0;    // Auto-increment for unique IDs
 let linkIdCounter = 0;
+let colorOverrides = {};   // Advanced color customizations
 ```
 
 ### Key Constants
-- `DEFAULTS` - 18 default configuration values
+- `DEFAULTS` - Default configuration values (layout, colors, banner, popup settings)
+- `BANNER_STYLES` - Announcement banner color schemes (info, warning, urgent)
 - `TEMPLATES` - Quick-start presets (customerFacing, employeeKiosk)
-- `APP_PRESETS` - 15 Windows app shortcuts with paths/args
+- `APP_PRESETS` - Windows app shortcuts with paths/args
+- `ICON_LIBRARY` - Built-in SVG icons organized by category (ui, microsoft, browsers, tools)
+- `COLOR_PROPERTIES` - Advanced color customization fields
 - `themes` - 20 WCAG-compliant color themes
 
 ### Rendering Pattern
 Template literals with inline event handlers. All user content runs through `escapeHtml()` for XSS prevention.
 
 ```javascript
-renderGroups()        // Rebuilds all group cards with drag handlers
+renderGroups()         // Rebuilds all group cards with drag handlers
 renderUngroupedLinks() // Rebuilds standalone links section
-updatePreview()       // Regenerates iframe preview (debounced)
+updatePreview()        // Regenerates iframe preview (debounced)
+renderAdvancedColors() // Rebuilds color override inputs
 ```
 
 ### Drag-and-Drop
@@ -73,12 +78,20 @@ Add to `APP_PRESETS` array:
 { key: 'myapp', name: 'My App', path: 'C:\\Path\\app.exe', args: '' }
 ```
 
+### New Icon to Library
+Add to appropriate category in `ICON_LIBRARY`:
+```javascript
+ICON_LIBRARY.categoryName.push({ name: 'Icon Name', svg: '<svg>...</svg>' });
+```
+
 ### New Configuration Field
 1. Add default to `DEFAULTS`
 2. Add input to appropriate tab in `index.html`
-3. Wire up with `oninput`/`onchange` to update state
+3. Wire up with `oninput`/`onchange` to call `updatePreview()` or `debouncedUpdatePreview()`
 4. Handle in `saveState()` and `loadState()`
-5. Use in `generateHTML()` and/or `generatePowerShellScript()`
+5. Handle in `applyImportedConfig()` for config import
+6. Handle in `resetAll()` for reset functionality
+7. Use in `generateHTML()` and/or `generatePowerShellScript()`
 
 ## Accessibility Requirements
 
