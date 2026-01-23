@@ -20,9 +20,7 @@
 - **Announcement Banner** - Optional banner with Info/Warning/Urgent styles
 - **Popup Windows** - Open links in popup windows for kiosk navigation
 - **Drag-and-Drop** - Reorder groups and links by dragging
-- **Local App Shortcuts** - Create .lnk shortcuts for local applications
 - **Quick Start Templates** - Load ready-made kiosk layouts
-- **App Presets** - Pick common Windows tools with prefilled paths
 - **Auto-Redirect** - Optionally redirect to another page after a delay
 - **Import/Export** - Save and load configurations as JSON
 - **WCAG Compliant** - Generated pages meet accessibility standards
@@ -67,17 +65,15 @@ Choose from 20 preset themes or create custom colors:
 
 - **Add Group** - Create categorized link sections with optional icons
 - **Add Link** - Add links to a group or as standalone (ungrouped)
-- **Web Links** - Standard URLs that open in the browser
-- **App Links** - Local application paths and arguments that generate .lnk shortcuts
 - **Drag handles** - Use ⋮⋮ (groups) or ⋮ (links) to reorder
 
 ## Download Options
 
 | Option | Use Case |
 |--------|----------|
-| **PowerShell Script** | Enterprise deployment via Intune/SCCM. Filename: `Generate-LandingPage_[ScriptName].ps1`. Captures computer name at runtime. Creates .lnk shortcuts for any app links. |
-| **HTML Only** | Local testing. Computer name shows as placeholder. |
-| **Import Landing Page** | Load a previously generated landing page to edit. |
+| **PowerShell Script** | Enterprise deployment via Intune/SCCM. Filename: `Generate-LandingPage_[ScriptName].ps1`. Captures computer name at runtime. |
+| **Save Configuration** | Save settings as JSON file for backup or sharing. |
+| **Load Configuration** | Import a previously saved configuration. |
 | **Reset Everything** | Clear all settings and start fresh. |
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for enterprise deployment instructions.

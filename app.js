@@ -75,30 +75,30 @@ const TEMPLATES = {
                 {
                     name: 'Start Here',
                     links: [
-                        { name: 'Store Map', type: 'web', url: 'https://example.com/map' },
-                        { name: 'Deals', type: 'web', url: 'https://example.com/deals' },
-                        { name: 'Events', type: 'web', url: 'https://example.com/events' }
+                        { name: 'Store Map', url: 'https://example.com/map' },
+                        { name: 'Deals', url: 'https://example.com/deals' },
+                        { name: 'Events', url: 'https://example.com/events' }
                     ]
                 },
                 {
                     name: 'Services',
                     links: [
-                        { name: 'Customer Support', type: 'web', url: 'https://example.com/support' },
-                        { name: 'Returns', type: 'web', url: 'https://example.com/returns' },
-                        { name: 'Order Status', type: 'web', url: 'https://example.com/orders' }
+                        { name: 'Customer Support', url: 'https://example.com/support' },
+                        { name: 'Returns', url: 'https://example.com/returns' },
+                        { name: 'Order Status', url: 'https://example.com/orders' }
                     ]
                 },
                 {
                     name: 'Guest Access',
                     links: [
-                        { name: 'Wi-Fi Setup', type: 'web', url: 'https://example.com/wifi' },
-                        { name: 'Accessibility', type: 'web', url: 'https://example.com/accessibility' }
+                        { name: 'Wi-Fi Setup', url: 'https://example.com/wifi' },
+                        { name: 'Accessibility', url: 'https://example.com/accessibility' }
                     ]
                 }
             ],
             ungroupedLinks: [
-                { name: 'Hours & Locations', type: 'web', url: 'https://example.com/locations' },
-                { name: 'Share Feedback', type: 'web', url: 'https://example.com/feedback' }
+                { name: 'Hours & Locations', url: 'https://example.com/locations' },
+                { name: 'Share Feedback', url: 'https://example.com/feedback' }
             ]
         }
     },
@@ -131,61 +131,42 @@ const TEMPLATES = {
                 {
                     name: 'HR & Benefits',
                     links: [
-                        { name: 'Pay Statements', type: 'web', url: 'https://intranet.example.com/pay' },
-                        { name: 'Benefits', type: 'web', url: 'https://intranet.example.com/benefits' },
-                        { name: 'Time Off', type: 'web', url: 'https://intranet.example.com/timeoff' }
+                        { name: 'Pay Statements', url: 'https://intranet.example.com/pay' },
+                        { name: 'Benefits', url: 'https://intranet.example.com/benefits' },
+                        { name: 'Time Off', url: 'https://intranet.example.com/timeoff' }
                     ]
                 },
                 {
                     name: 'IT Support',
                     links: [
-                        { name: 'Service Desk', type: 'web', url: 'https://intranet.example.com/it' },
-                        { name: 'Password Reset', type: 'web', url: 'https://intranet.example.com/password' }
+                        { name: 'Service Desk', url: 'https://intranet.example.com/it' },
+                        { name: 'Password Reset', url: 'https://intranet.example.com/password' }
                     ]
                 },
                 {
                     name: 'Operations',
                     links: [
-                        { name: 'Shift Schedule', type: 'web', url: 'https://intranet.example.com/schedule' },
-                        { name: 'SOP Library', type: 'web', url: 'https://intranet.example.com/sop' },
-                        { name: 'Incident Report', type: 'web', url: 'https://intranet.example.com/incident' }
+                        { name: 'Shift Schedule', url: 'https://intranet.example.com/schedule' },
+                        { name: 'SOP Library', url: 'https://intranet.example.com/sop' },
+                        { name: 'Incident Report', url: 'https://intranet.example.com/incident' }
                     ]
                 },
                 {
                     name: 'Training',
                     links: [
-                        { name: 'Learning Portal', type: 'web', url: 'https://intranet.example.com/training' },
-                        { name: 'Compliance', type: 'web', url: 'https://intranet.example.com/compliance' }
+                        { name: 'Learning Portal', url: 'https://intranet.example.com/training' },
+                        { name: 'Compliance', url: 'https://intranet.example.com/compliance' }
                     ]
                 }
             ],
             ungroupedLinks: [
-                { name: 'Company News', type: 'web', url: 'https://intranet.example.com/news' },
-                { name: 'All Hands Stream', type: 'web', url: 'https://intranet.example.com/stream' }
+                { name: 'Company News', url: 'https://intranet.example.com/news' },
+                { name: 'All Hands Stream', url: 'https://intranet.example.com/stream' }
             ]
         }
     }
 };
 
-const APP_PRESETS = [
-    { key: 'custom', name: 'Custom', path: '', args: '' },
-    { key: 'volume-control', name: 'Volume Control', path: 'C:\\Windows\\System32\\SndVol.exe', args: '' },
-    { key: 'print-spooler', name: 'Print Spooler (Services)', path: 'C:\\Windows\\System32\\services.msc', args: '' },
-    { key: 'file-explorer', name: 'File Explorer', path: 'C:\\Windows\\explorer.exe', args: '' },
-    { key: 'task-manager', name: 'Task Manager', path: 'C:\\Windows\\System32\\Taskmgr.exe', args: '' },
-    { key: 'command-prompt', name: 'Command Prompt', path: 'C:\\Windows\\System32\\cmd.exe', args: '' },
-    { key: 'powershell', name: 'PowerShell', path: 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe', args: '' },
-    { key: 'control-panel', name: 'Control Panel', path: 'C:\\Windows\\System32\\control.exe', args: '' },
-    { key: 'notepad', name: 'Notepad', path: 'C:\\Windows\\System32\\notepad.exe', args: '' },
-    { key: 'calculator', name: 'Calculator', path: 'C:\\Windows\\System32\\calc.exe', args: '' },
-    { key: 'snipping-tool', name: 'Snipping Tool', path: 'C:\\Windows\\System32\\SnippingTool.exe', args: '' },
-    { key: 'remote-desktop', name: 'Remote Desktop', path: 'C:\\Windows\\System32\\mstsc.exe', args: '' },
-    { key: 'device-manager', name: 'Device Manager', path: 'C:\\Windows\\System32\\devmgmt.msc', args: '' },
-    { key: 'disk-management', name: 'Disk Management', path: 'C:\\Windows\\System32\\diskmgmt.msc', args: '' },
-    { key: 'event-viewer', name: 'Event Viewer', path: 'C:\\Windows\\System32\\eventvwr.msc', args: '' },
-    { key: 'on-screen-keyboard', name: 'On-Screen Keyboard', path: 'C:\\Windows\\System32\\osk.exe', args: '' },
-    { key: 'print-queue', name: 'Print Queue', path: 'C:\\Windows\\explorer.exe', args: 'shell:PrintersFolder' }
-];
 
 // Icon Library - inline SVGs for icon picker
 const ICON_LIBRARY = {
@@ -966,10 +947,27 @@ const STORAGE_KEY = 'startPageStudioState';
 
 // Save current state to localStorage
 function saveState() {
+    // Clean link objects to only include valid fields (remove app-related fields)
+    const cleanLink = (link) => ({
+        id: link.id,
+        name: link.name || '',
+        url: link.url || '',
+        icon: link.icon || ''
+    });
+
+    const cleanedGroups = groups.map(g => ({
+        id: g.id,
+        name: g.name,
+        icon: g.icon || '',
+        links: g.links.map(cleanLink)
+    }));
+
+    const cleanedUngroupedLinks = ungroupedLinks.map(cleanLink);
+
     const state = {
         appVersion: APP_VERSION,
-        groups,
-        ungroupedLinks,
+        groups: cleanedGroups,
+        ungroupedLinks: cleanedUngroupedLinks,
         groupIdCounter,
         linkIdCounter,
         selectedTheme,
@@ -1050,9 +1048,22 @@ function loadState() {
             const state = JSON.parse(saved);
             const isLegacyState = !state.appVersion;
 
-            // Restore arrays and counters
-            groups = state.groups || [];
-            ungroupedLinks = state.ungroupedLinks || [];
+            // Clean link objects to only include valid fields (remove app-related fields)
+            const cleanLink = (link) => ({
+                id: link.id,
+                name: link.name || '',
+                url: link.url || '',
+                icon: link.icon || ''
+            });
+
+            // Restore arrays and counters, cleaning out any legacy app-related fields
+            groups = (state.groups || []).map(g => ({
+                id: g.id,
+                name: g.name,
+                icon: g.icon || '',
+                links: (g.links || []).map(cleanLink)
+            }));
+            ungroupedLinks = (state.ungroupedLinks || []).map(cleanLink);
             groupIdCounter = state.groupIdCounter || 0;
             linkIdCounter = state.linkIdCounter || 0;
             selectedTheme = state.selectedTheme || DEFAULTS.theme;
@@ -1537,6 +1548,10 @@ function updateGroupName(groupId, name) {
 
 // Update link in group
 function updateGroupLink(groupId, linkId, field, value) {
+    // Only allow valid link fields
+    const validFields = ['name', 'url', 'icon'];
+    if (!validFields.includes(field)) return;
+
     const group = groups.find(g => g.id === groupId);
     if (group) {
         const link = group.links.find(l => l.id === linkId);
@@ -1545,45 +1560,6 @@ function updateGroupLink(groupId, linkId, field, value) {
             updatePreview();
         }
     }
-}
-
-function markAppPresetCustom(selectId) {
-    const select = document.getElementById(selectId);
-    if (select && select.value !== 'custom') {
-        select.value = 'custom';
-    }
-}
-
-function applyAppPreset(targetType, groupId, linkId, presetKey) {
-    const preset = APP_PRESETS.find(item => item.key === presetKey);
-    if (!preset) return;
-
-    if (targetType === 'group') {
-        const group = groups.find(g => g.id === groupId);
-        if (group) {
-            const link = group.links.find(l => l.id === linkId);
-            if (link) {
-                link.appPath = preset.path;
-                link.appArgs = preset.args;
-                if (!link.name) {
-                    link.name = preset.name;
-                }
-            }
-        }
-        renderGroups();
-    } else {
-        const link = ungroupedLinks.find(l => l.id === linkId);
-        if (link) {
-            link.appPath = preset.path;
-            link.appArgs = preset.args;
-            if (!link.name) {
-                link.name = preset.name;
-            }
-        }
-        renderUngroupedLinks();
-    }
-    updatePreview();
-    announce(`${preset.name} preset applied`);
 }
 
 // Add ungrouped link
@@ -1607,6 +1583,10 @@ function removeUngroupedLink(linkId) {
 
 // Update ungrouped link
 function updateUngroupedLink(linkId, field, value) {
+    // Only allow valid link fields
+    const validFields = ['name', 'url', 'icon'];
+    if (!validFields.includes(field)) return;
+
     const link = ungroupedLinks.find(l => l.id === linkId);
     if (link) {
         link[field] = value;
@@ -1668,10 +1648,6 @@ function renderGroups() {
                          ondragleave="handleLinkDragLeave(event)"
                          ondrop="handleLinkDrop(event, ${group.id}, ${link.id})">
                         <span class="drag-handle" title="Drag to reorder">⋮</span>
-                        <select class="link-type-select" aria-label="Link type" onchange="updateGroupLink(${group.id}, ${link.id}, 'type', this.value); renderGroups();">
-                            <option value="web" ${(link.type || 'web') === 'web' ? 'selected' : ''}>Web</option>
-                            <option value="app" ${link.type === 'app' ? 'selected' : ''}>App</option>
-                        </select>
                         <input type="text" id="link-name-${group.id}-${link.id}" value="${escapeHtml(link.name)}"
                                placeholder="Display name"
                                aria-label="Link display name"
@@ -1690,35 +1666,11 @@ function renderGroups() {
                                    onchange="handleLinkIconUpload('group', ${group.id}, ${link.id}, this)" class="visually-hidden">
                         </label>
                         <button type="button" class="btn btn-sm" onclick="clearLinkIcon('group', ${group.id}, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
-                        ${(link.type || 'web') === 'web' ? `
                         <input type="url" id="link-url-${group.id}-${link.id}" value="${escapeHtml(link.url || '')}"
                                placeholder="https://example.com"
                                aria-label="Link URL"
                                onchange="updateGroupLink(${group.id}, ${link.id}, 'url', this.value)"
                                onblur="validateUrlInput(this)">
-                        ` : `
-                        ${renderAppPresetSelect(`app-preset-${group.id}-${link.id}`, getPresetKey(link.appPath || '', link.appArgs || ''), 'group', group.id, link.id)}
-                        <input type="text" id="link-apppath-${group.id}-${link.id}" value="${escapeHtml(link.appPath || '')}"
-                               placeholder="C:\\Windows\\System32\\app.exe"
-                               aria-label="Executable path"
-                               onchange="updateGroupLink(${group.id}, ${link.id}, 'appPath', this.value)"
-                               oninput="markAppPresetCustom('app-preset-${group.id}-${link.id}')">
-                        <input type="text" id="link-appargs-${group.id}-${link.id}" value="${escapeHtml(link.appArgs || '')}"
-                               placeholder="Arguments (optional)"
-                               aria-label="Arguments"
-                               onchange="updateGroupLink(${group.id}, ${link.id}, 'appArgs', this.value)"
-                               oninput="markAppPresetCustom('app-preset-${group.id}-${link.id}')">
-                        <input type="text" id="link-shortcut-${group.id}-${link.id}" value="${escapeHtml(link.shortcutName || '')}"
-                               placeholder="Shortcut.lnk"
-                               aria-label="Shortcut filename"
-                               style="width: 120px;"
-                               onchange="updateGroupLink(${group.id}, ${link.id}, 'shortcutName', this.value)">
-                        <input type="text" id="link-shortcutpath-${group.id}-${link.id}" value="${escapeHtml(link.shortcutPath || '')}"
-                               placeholder="Existing shortcut path (optional)"
-                               aria-label="Existing shortcut path"
-                               style="min-width: 220px;"
-                               onchange="updateGroupLink(${group.id}, ${link.id}, 'shortcutPath', this.value)">
-                        `}
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeLinkFromGroup(${group.id}, ${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                             <span aria-hidden="true">X</span>
                             <span class="visually-hidden">Remove</span>
@@ -1751,10 +1703,6 @@ function renderUngroupedLinks() {
              ondragleave="handleUngroupedDragLeave(event)"
              ondrop="handleUngroupedDrop(event, ${link.id})">
             <span class="drag-handle" title="Drag to reorder">⋮</span>
-            <select class="link-type-select" aria-label="Link type" onchange="updateUngroupedLink(${link.id}, 'type', this.value); renderUngroupedLinks();">
-                <option value="web" ${(link.type || 'web') === 'web' ? 'selected' : ''}>Web</option>
-                <option value="app" ${link.type === 'app' ? 'selected' : ''}>App</option>
-            </select>
             <input type="text" id="ungrouped-name-${link.id}" value="${escapeHtml(link.name)}"
                    placeholder="Display name"
                    aria-label="Link display name"
@@ -1773,35 +1721,11 @@ function renderUngroupedLinks() {
                        onchange="handleLinkIconUpload('ungrouped', 0, ${link.id}, this)" class="visually-hidden">
             </label>
             <button type="button" class="btn btn-sm" onclick="clearLinkIcon('ungrouped', 0, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
-            ${(link.type || 'web') === 'web' ? `
             <input type="url" id="ungrouped-url-${link.id}" value="${escapeHtml(link.url || '')}"
                    placeholder="https://example.com"
                    aria-label="Link URL"
                    onchange="updateUngroupedLink(${link.id}, 'url', this.value)"
                    onblur="validateUrlInput(this)">
-            ` : `
-            ${renderAppPresetSelect(`app-preset-ungrouped-${link.id}`, getPresetKey(link.appPath || '', link.appArgs || ''), 'ungrouped', 0, link.id)}
-            <input type="text" id="ungrouped-apppath-${link.id}" value="${escapeHtml(link.appPath || '')}"
-                   placeholder="C:\\Windows\\System32\\app.exe"
-                   aria-label="Executable path"
-                   onchange="updateUngroupedLink(${link.id}, 'appPath', this.value)"
-                   oninput="markAppPresetCustom('app-preset-ungrouped-${link.id}')">
-            <input type="text" id="ungrouped-appargs-${link.id}" value="${escapeHtml(link.appArgs || '')}"
-                   placeholder="Arguments (optional)"
-                   aria-label="Arguments"
-                   onchange="updateUngroupedLink(${link.id}, 'appArgs', this.value)"
-                   oninput="markAppPresetCustom('app-preset-ungrouped-${link.id}')">
-            <input type="text" id="ungrouped-shortcut-${link.id}" value="${escapeHtml(link.shortcutName || '')}"
-                   placeholder="Shortcut.lnk"
-                   aria-label="Shortcut filename"
-                   style="width: 120px;"
-                   onchange="updateUngroupedLink(${link.id}, 'shortcutName', this.value)">
-            <input type="text" id="ungrouped-shortcutpath-${link.id}" value="${escapeHtml(link.shortcutPath || '')}"
-                   placeholder="Existing shortcut path (optional)"
-                   aria-label="Existing shortcut path"
-                   style="min-width: 220px;"
-                   onchange="updateUngroupedLink(${link.id}, 'shortcutPath', this.value)">
-            `}
             <button type="button" class="btn btn-danger btn-sm" onclick="removeUngroupedLink(${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                 <span aria-hidden="true">X</span>
                 <span class="visually-hidden">Remove</span>
@@ -1815,24 +1739,6 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text || '';
     return div.innerHTML;
-}
-
-function getPresetKey(appPath, appArgs) {
-    const match = APP_PRESETS.find(item => item.path === appPath && item.args === appArgs);
-    return match ? match.key : 'custom';
-}
-
-function renderAppPresetSelect(selectId, presetKey, targetType, groupId, linkId) {
-    const options = APP_PRESETS.map(item =>
-        `<option value="${item.key}" ${item.key === presetKey ? 'selected' : ''}>${item.name}</option>`
-    ).join('');
-    const safeGroupId = typeof groupId === 'number' ? groupId : 0;
-    return `
-        <select class="app-preset-select" id="${selectId}" aria-label="App preset"
-                onchange="applyAppPreset('${targetType}', ${safeGroupId}, ${linkId}, this.value)">
-            ${options}
-        </select>
-    `;
 }
 
 // Generate the HTML content
@@ -1895,10 +1801,10 @@ function generateHTML(useComputerNameVariable = false) {
     let linksHTML = '';
 
     // Add grouped links
-    const validGroups = groups.filter(g => g.name && g.links.some(l => l.name && (l.url || l.appPath || l.shortcutPath)));
+    const validGroups = groups.filter(g => g.name && g.links.some(l => l.name && l.url));
     if (validGroups.length > 0) {
         linksHTML += validGroups.map(group => {
-            const validLinks = group.links.filter(l => l.name && (l.url || l.appPath || l.shortcutPath));
+            const validLinks = group.links.filter(l => l.name && l.url);
             if (validLinks.length === 0) return '';
 
             const groupId = `group-${group.id}`;
@@ -1910,9 +1816,7 @@ function generateHTML(useComputerNameVariable = false) {
                 </div>
                 <ul class="links-list">
                     ${validLinks.map(link => {
-                        const href = link.type === 'app'
-                            ? (link.shortcutPath ? encodeURI(link.shortcutPath) : './' + encodeURIComponent(link.shortcutName || link.name + '.lnk'))
-                            : escapeHtml(link.url);
+                        const href = escapeHtml(link.url);
                         const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                         const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
                         return `<li><a href="${href}" class="link-button style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
@@ -1923,14 +1827,12 @@ function generateHTML(useComputerNameVariable = false) {
     }
 
     // Add standalone links (no group heading)
-    const validUngrouped = ungroupedLinks.filter(l => l.name && (l.url || l.appPath || l.shortcutPath));
+    const validUngrouped = ungroupedLinks.filter(l => l.name && l.url);
     if (validUngrouped.length > 0) {
         linksHTML += `
             <div class="standalone-links">
                 ${validUngrouped.map(link => {
-                    const href = link.type === 'app'
-                        ? (link.shortcutPath ? encodeURI(link.shortcutPath) : './' + encodeURIComponent(link.shortcutName || link.name + '.lnk'))
-                        : escapeHtml(link.url);
+                    const href = escapeHtml(link.url);
                     const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                     const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
                     return `<a href="${href}" class="link-button standalone style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
@@ -2026,23 +1928,13 @@ function generateHTML(useComputerNameVariable = false) {
             icon: g.icon || '',
             links: g.links.map(l => ({
                 name: l.name,
-                type: l.type || 'web',
                 url: l.url || '',
-                appPath: l.appPath || '',
-                appArgs: l.appArgs || '',
-                shortcutName: l.shortcutName || '',
-                shortcutPath: l.shortcutPath || '',
                 icon: l.icon || ''
             }))
         })),
         ungroupedLinks: ungroupedLinks.map(l => ({
             name: l.name,
-            type: l.type || 'web',
             url: l.url || '',
-            appPath: l.appPath || '',
-            appArgs: l.appArgs || '',
-            shortcutName: l.shortcutName || '',
-            shortcutPath: l.shortcutPath || '',
             icon: l.icon || ''
         }))
     };
@@ -2829,51 +2721,6 @@ function generatePowerShellScript() {
     const networkIdentifierPattern = document.getElementById('networkIdentifierPattern').value.trim() || DEFAULTS.networkIdentifierPattern;
     const networkIdentifierFallback = document.getElementById('networkIdentifierFallback').value.trim() || DEFAULTS.networkIdentifierFallback;
 
-    // Collect all app links for shortcut creation
-    const appLinks = [];
-    groups.forEach(group => {
-        group.links.forEach(link => {
-            if (link.type === 'app' && link.appPath && !link.shortcutPath) {
-                appLinks.push({
-                    name: link.shortcutName || (link.name + '.lnk'),
-                    path: link.appPath,
-                    args: link.appArgs || ''
-                });
-            }
-        });
-    });
-    ungroupedLinks.forEach(link => {
-        if (link.type === 'app' && link.appPath && !link.shortcutPath) {
-            appLinks.push({
-                name: link.shortcutName || (link.name + '.lnk'),
-                path: link.appPath,
-                args: link.appArgs || ''
-            });
-        }
-    });
-
-    // Generate shortcut creation code
-    let shortcutCode = '';
-    if (appLinks.length > 0) {
-        shortcutCode = `
-# Create shortcuts for local applications
-$WshShell = New-Object -ComObject WScript.Shell
-`;
-        appLinks.forEach(app => {
-            const shortcutName = app.name.endsWith('.lnk') ? app.name : app.name + '.lnk';
-            const escapedName = shortcutName.replace(/'/g, "''");
-            const escapedPath = app.path.replace(/'/g, "''");
-            const escapedArgs = app.args.replace(/'/g, "''");
-            shortcutCode += `
-$shortcut = $WshShell.CreateShortcut("$outputFolder\\${escapedName}")
-$shortcut.TargetPath = '${escapedPath}'
-${app.args ? `$shortcut.Arguments = '${escapedArgs}'` : ''}
-$shortcut.Save()
-Write-Log "Created shortcut: ${escapedName}"
-`;
-        });
-    }
-
     // Get the filename from destination path for uninstall
     const fileName = destinationPath.substring(destinationPath.lastIndexOf('\\') + 1) || 'index.html';
 
@@ -2917,13 +2764,6 @@ if ($Uninstall) {
             Write-Log "Removed: ${fileName}"
         } else {
             Write-Log "File not found: ${fileName}"
-        }
-
-        # Remove shortcut files
-        $shortcuts = Get-ChildItem -Path $outputFolder -Filter "*.lnk" -ErrorAction SilentlyContinue
-        foreach ($shortcut in $shortcuts) {
-            Remove-Item -Path $shortcut.FullName -Force
-            Write-Log "Removed shortcut: $($shortcut.Name)"
         }
 
         Write-Log "Uninstall completed successfully"
@@ -2975,7 +2815,7 @@ ${escapedHtml}
         # Write the HTML file
         $htmlContent | Out-File -FilePath $outputPath -Encoding UTF8 -Force
         Write-Log "Landing page generated successfully"
-${shortcutCode}
+
         Write-Log "Install completed successfully"
         Write-Log "Log file: $logFile"
         exit 0
@@ -3345,12 +3185,7 @@ function applyImportedConfig(config) {
             links: g.links.map(l => ({
                 id: linkIdCounter++,
                 name: l.name,
-                type: l.type || 'web',
                 url: l.url || '',
-                appPath: l.appPath || '',
-                appArgs: l.appArgs || '',
-                shortcutName: l.shortcutName || '',
-                shortcutPath: l.shortcutPath || '',
                 icon: l.icon || ''
             }))
         }));
@@ -3362,12 +3197,7 @@ function applyImportedConfig(config) {
         ungroupedLinks = config.ungroupedLinks.map(l => ({
             id: linkIdCounter++,
             name: l.name,
-            type: l.type || 'web',
             url: l.url || '',
-            appPath: l.appPath || '',
-            appArgs: l.appArgs || '',
-            shortcutName: l.shortcutName || '',
-            shortcutPath: l.shortcutPath || '',
             icon: l.icon || ''
         }));
         renderUngroupedLinks();

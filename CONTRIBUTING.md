@@ -55,14 +55,6 @@ themes.myTheme = {
 
 Ensure WCAG AA contrast compliance.
 
-### New App Preset
-
-Add to `APP_PRESETS` array:
-
-```javascript
-{ key: 'uniquekey', name: 'Display Name', path: 'C:\\Path\\To\\app.exe', args: '' }
-```
-
 ### New Icon
 
 Add to appropriate category in `ICON_LIBRARY`:

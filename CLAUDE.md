@@ -37,7 +37,6 @@ let colorOverrides = {};   // Advanced color customizations
 - `DEFAULTS` - Default configuration values (layout, colors, banner, popup settings)
 - `BANNER_STYLES` - Announcement banner color schemes (info, warning, urgent)
 - `TEMPLATES` - Quick-start presets (customerFacing, employeeKiosk)
-- `APP_PRESETS` - Windows app shortcuts with paths/args
 - `ICON_LIBRARY` - Built-in SVG icons organized by category (ui, microsoft, browsers, tools)
 - `COLOR_PROPERTIES` - Advanced color customization fields
 - `themes` - 20 WCAG-compliant color themes
@@ -70,12 +69,6 @@ themes.myTheme = {
     surface: '#hex', text: '#hex', textSecondary: '#hex',
     border: '#hex', linkBg: '#hex', linkText: '#hex', linkBorder: '#hex'
 };
-```
-
-### New App Preset
-Add to `APP_PRESETS` array:
-```javascript
-{ key: 'myapp', name: 'My App', path: 'C:\\Path\\app.exe', args: '' }
 ```
 
 ### New Icon to Library
