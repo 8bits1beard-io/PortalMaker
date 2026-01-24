@@ -24,6 +24,7 @@ const DEFAULTS = {
     // Link layout options
     linkLayout: 'cards',
     buttonStyle: 'rounded',
+    buttonSize: 'medium',
     gridColumns: '3',
     // Announcement banner
     bannerEnabled: false,
@@ -1003,6 +1004,7 @@ function saveState() {
             // Link layout
             linkLayout: document.getElementById('linkLayout').value,
             buttonStyle: document.getElementById('buttonStyle').value,
+            buttonSize: document.getElementById('buttonSize').value,
             gridColumns: document.getElementById('gridColumns').value,
             // Announcement banner
             bannerEnabled: document.getElementById('bannerEnabled').checked,
@@ -1120,6 +1122,7 @@ function loadState() {
                 // Restore link layout settings
                 document.getElementById('linkLayout').value = state.settings.linkLayout || DEFAULTS.linkLayout;
                 document.getElementById('buttonStyle').value = state.settings.buttonStyle || DEFAULTS.buttonStyle;
+                document.getElementById('buttonSize').value = state.settings.buttonSize || DEFAULTS.buttonSize;
                 document.getElementById('gridColumns').value = state.settings.gridColumns || DEFAULTS.gridColumns;
 
                 // Restore announcement banner settings
@@ -1773,6 +1776,7 @@ function generateHTML(useComputerNameVariable = false) {
     // Link layout settings
     const linkLayout = document.getElementById('linkLayout').value || DEFAULTS.linkLayout;
     const buttonStyle = document.getElementById('buttonStyle').value || DEFAULTS.buttonStyle;
+    const buttonSize = document.getElementById('buttonSize').value || DEFAULTS.buttonSize;
     const gridColumns = document.getElementById('gridColumns').value || DEFAULTS.gridColumns;
 
     // Announcement banner settings
@@ -1819,7 +1823,7 @@ function generateHTML(useComputerNameVariable = false) {
                         const href = escapeHtml(link.url);
                         const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                         const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
-                        return `<li><a href="${href}" class="link-button style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
+                        return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
                 </ul>
             </section>`;
@@ -1835,7 +1839,7 @@ function generateHTML(useComputerNameVariable = false) {
                     const href = escapeHtml(link.url);
                     const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                     const popupAttr = openLinksInPopup ? ` onclick="openPopup('${href.replace(/'/g, "\\'")}'); return false;"` : '';
-                    return `<a href="${href}" class="link-button standalone style-${buttonStyle}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
+                    return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}"${popupAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
                 }).join('')}
             </div>`;
     }
@@ -2424,6 +2428,34 @@ function generateHTML(useComputerNameVariable = false) {
             color: var(--body-text);
             text-decoration: none;
             box-shadow: none;
+        }
+
+        /* Button size variations */
+        .link-button.size-small {
+            padding: 0.6rem 1rem;
+            font-size: 0.875rem;
+        }
+        .link-button.size-small .link-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .link-button.size-medium {
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+        }
+        .link-button.size-medium .link-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .link-button.size-large {
+            padding: 1.25rem 2rem;
+            font-size: 1.125rem;
+        }
+        .link-button.size-large .link-icon {
+            width: 24px;
+            height: 24px;
         }
 
         /* Announcement banner */
@@ -3145,6 +3177,7 @@ function applyImportedConfig(config) {
         // Link layout options
         document.getElementById('linkLayout').value = config.settings.linkLayout || DEFAULTS.linkLayout;
         document.getElementById('buttonStyle').value = config.settings.buttonStyle || DEFAULTS.buttonStyle;
+        document.getElementById('buttonSize').value = config.settings.buttonSize || DEFAULTS.buttonSize;
         document.getElementById('gridColumns').value = config.settings.gridColumns || DEFAULTS.gridColumns;
 
         // Announcement banner
@@ -3293,6 +3326,7 @@ function resetAll() {
     // Reset link layout settings
     document.getElementById('linkLayout').value = DEFAULTS.linkLayout;
     document.getElementById('buttonStyle').value = DEFAULTS.buttonStyle;
+    document.getElementById('buttonSize').value = DEFAULTS.buttonSize;
     document.getElementById('gridColumns').value = DEFAULTS.gridColumns;
 
     // Reset announcement banner settings
