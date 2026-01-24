@@ -11,6 +11,7 @@ const DEFAULTS = {
     topLogoWidth: '360',        // px
     topLogoSpacing: '1.5',      // rem
     computerNamePosition: 'top-right',
+    computerNameFormat: 'hostname',
     networkIdentifierPosition: 'top-left',
     networkIdentifierDisplay: 'site',
     networkIdentifierPattern: '.*s0(\\d{4})\\.(\\w+)\\..*',
@@ -981,6 +982,7 @@ function saveState() {
             greetingSpacing: document.getElementById('greetingSpacing').value,
             showComputerName: document.getElementById('showComputerName').checked,
             computerNamePosition: document.getElementById('computerNamePosition').value,
+            computerNameFormat: document.getElementById('computerNameFormat').value,
             showNetworkIdentifier: document.getElementById('showNetworkIdentifier').checked,
             networkIdentifierPosition: document.getElementById('networkIdentifierPosition').value,
             networkIdentifierDisplay: document.getElementById('networkIdentifierDisplay').value,
@@ -1100,6 +1102,7 @@ function loadState() {
 
                 document.getElementById('showComputerName').checked = state.settings.showComputerName === true;
                 document.getElementById('computerNamePosition').value = state.settings.computerNamePosition || 'top-right';
+                document.getElementById('computerNameFormat').value = state.settings.computerNameFormat || DEFAULTS.computerNameFormat;
                 document.getElementById('showNetworkIdentifier').checked = state.settings.showNetworkIdentifier === true;
                 document.getElementById('networkIdentifierPosition').value = state.settings.networkIdentifierPosition || DEFAULTS.networkIdentifierPosition;
                 document.getElementById('networkIdentifierDisplay').value = state.settings.networkIdentifierDisplay || DEFAULTS.networkIdentifierDisplay;
@@ -1752,6 +1755,7 @@ function generateHTML(useComputerNameVariable = false) {
     const greetingSpacing = document.getElementById('greetingSpacing').value || DEFAULTS.greetingSpacing;
     const showComputerName = document.getElementById('showComputerName').checked;
     const computerNamePosition = document.getElementById('computerNamePosition').value;
+    const computerNameFormat = document.getElementById('computerNameFormat').value;
     const showNetworkIdentifier = document.getElementById('showNetworkIdentifier').checked;
     const networkIdentifierPosition = document.getElementById('networkIdentifierPosition').value;
     const networkIdentifierDisplay = document.getElementById('networkIdentifierDisplay').value;
@@ -2752,6 +2756,7 @@ function generatePowerShellScript() {
     const networkIdentifierDisplay = document.getElementById('networkIdentifierDisplay').value || DEFAULTS.networkIdentifierDisplay;
     const networkIdentifierPattern = document.getElementById('networkIdentifierPattern').value.trim() || DEFAULTS.networkIdentifierPattern;
     const networkIdentifierFallback = document.getElementById('networkIdentifierFallback').value.trim() || DEFAULTS.networkIdentifierFallback;
+    const computerNameFormat = document.getElementById('computerNameFormat').value;
 
     // Get the filename from destination path for uninstall
     const fileName = destinationPath.substring(destinationPath.lastIndexOf('\\') + 1) || 'index.html';
@@ -2811,11 +2816,15 @@ if ($Uninstall) {
     $logFile = Join-Path $logFolder "Generate-LandingPage_${sanitizedScriptName}_$timestamp.log"
 
     $computerName = $env:COMPUTERNAME
+    $computerNameFormat = '${computerNameFormat}'
     $networkDisplay = '${networkIdentifierFallback.replace(/'/g, "''")}'
     $networkPattern = '${networkIdentifierPattern.replace(/'/g, "''")}'
     $networkMode = '${networkIdentifierDisplay.replace(/'/g, "''")}'
     try {
         $dnsName = [System.Net.Dns]::GetHostEntry($env:COMPUTERNAME).HostName
+        if ($computerNameFormat -eq 'fqdn') {
+            $computerName = $dnsName
+        }
         if ($networkMode -eq 'fqdn') {
             $networkDisplay = $dnsName
         } elseif ($dnsName -match $networkPattern) {
@@ -3157,6 +3166,7 @@ function applyImportedConfig(config) {
 
         document.getElementById('showComputerName').checked = config.settings.showComputerName === true;
         document.getElementById('computerNamePosition').value = config.settings.computerNamePosition || 'top-right';
+        document.getElementById('computerNameFormat').value = config.settings.computerNameFormat || DEFAULTS.computerNameFormat;
         document.getElementById('showNetworkIdentifier').checked = config.settings.showNetworkIdentifier === true;
         document.getElementById('networkIdentifierPosition').value = config.settings.networkIdentifierPosition || DEFAULTS.networkIdentifierPosition;
         document.getElementById('networkIdentifierDisplay').value = config.settings.networkIdentifierDisplay || DEFAULTS.networkIdentifierDisplay;
@@ -3304,6 +3314,7 @@ function resetAll() {
 
     document.getElementById('showComputerName').checked = false;
     document.getElementById('computerNamePosition').value = DEFAULTS.computerNamePosition;
+    document.getElementById('computerNameFormat').value = DEFAULTS.computerNameFormat;
     document.getElementById('showNetworkIdentifier').checked = false;
     document.getElementById('networkIdentifierPosition').value = DEFAULTS.networkIdentifierPosition;
     document.getElementById('networkIdentifierDisplay').value = DEFAULTS.networkIdentifierDisplay;
