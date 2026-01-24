@@ -18,7 +18,7 @@ Open `index.html` directly in a browser. No build step required.
 
 ### Files
 - **index.html** - UI structure with 4-tab interface (Layout, Colors, Links, Export)
-- **app.js** - Core logic, state management, HTML/PowerShell generation (~3500 lines)
+- **app.js** - Core logic, state management, HTML/PowerShell generation (~3300 lines)
 - **styles.css** - Responsive styling with CSS variables, accessibility support
 
 ### State Management
