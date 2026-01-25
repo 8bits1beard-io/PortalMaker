@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="portalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5"/>
+      <stop offset="100%" style="stop-color:#9333EA"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Portal arch shape -->
+  <path d="M8 58 L8 28 Q8 6, 32 6 Q56 6, 56 28 L56 58 L46 58 L46 28 Q46 16, 32 16 Q18 16, 18 28 L18 58 Z" 
+        fill="url(#portalGradient)"/>
+  
+  <!-- Wrench overlay -->
+  <g transform="translate(32, 38) rotate(45)">
+    <!-- Wrench handle -->
+    <rect x="-3.5" y="-16" width="7" height="22" rx="1.5" fill="white"/>
+    <!-- Wrench head -->
+    <path d="M-7 -16 L7 -16 L7 -10 L3.5 -10 L3.5 -7 L-3.5 -7 L-3.5 -10 L-7 -10 Z" fill="white"/>
+  </g>
+</svg>
