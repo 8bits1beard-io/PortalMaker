@@ -887,8 +887,12 @@ function selectIcon(categoryKey, iconKey) {
     closeIconPicker();
 }
 
+// State for preset picker target
+let presetPickerGroupId = null;
+
 // Open preset picker modal
-function openPresetPicker() {
+function openPresetPicker(groupId = null) {
+    presetPickerGroupId = groupId;
     const modal = document.getElementById('preset-picker-modal');
     modal.hidden = false;
     renderPresetPicker();
@@ -901,6 +905,7 @@ function openPresetPicker() {
 function closePresetPicker() {
     const modal = document.getElementById('preset-picker-modal');
     modal.hidden = true;
+    presetPickerGroupId = null;
     document.removeEventListener('keydown', handlePresetPickerKeydown);
 }
 
@@ -949,24 +954,36 @@ function filterPresets(query) {
     renderPresetPicker(query);
 }
 
-// Add preset as an ungrouped link
+// Add preset as a link (to group or ungrouped)
 function addPresetAsLink(presetId) {
     const preset = APP_PRESETS.find(p => p.id === presetId);
     if (!preset) return;
 
-    // Add as ungrouped link (same pattern as existing addUngroupedLink)
-    ungroupedLinks.push({
+    const newLink = {
         id: linkIdCounter++,
         name: preset.name,
         url: preset.url,
         icon: preset.icon
-    });
+    };
+
+    if (presetPickerGroupId !== null) {
+        // Add to specific group
+        const group = groups.find(g => g.id === presetPickerGroupId);
+        if (group) {
+            group.links.push(newLink);
+            renderGroups();
+            announce(`Added ${preset.name} to ${group.name || 'group'}`);
+        }
+    } else {
+        // Add as ungrouped link
+        ungroupedLinks.push(newLink);
+        renderUngroupedLinks();
+        announce(`Added ${preset.name} to links`);
+    }
 
     closePresetPicker();
-    renderUngroupedLinks();
     updatePreview();
     saveState();
-    announce(`Added ${preset.name} to links`);
 }
 
 // Announce to screen readers
@@ -1777,6 +1794,15 @@ function renderGroups() {
                     </div>
                 `).join('')}
                 <button type="button" class="btn btn-secondary btn-sm" onclick="addLinkToGroup(${group.id})" aria-label="Add link to ${escapeHtml(group.name) || 'this group'}">+ Add Link</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="openPresetPicker(${group.id})" aria-label="Add preset to ${escapeHtml(group.name) || 'this group'}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -1px;">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                    Add Preset
+                </button>
             </div>
         </fieldset>
     `).join('');
