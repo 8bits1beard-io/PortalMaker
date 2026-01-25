@@ -1278,19 +1278,9 @@ function init() {
     renderThemeSwatches();
     renderAdvancedColors();
 
-    if (!hasExistingState) {
-        // Set defaults for new users (no logo by default)
-        addGroup('Productivity', [
-            { name: 'Email', url: 'https://outlook.office.com' }
-        ], true);
-        addGroup('Resources', [
-            { name: 'Help Desk', url: 'https://support.example.com' }
-        ], true);
-    } else {
-        // Render loaded state
-        renderGroups();
-        renderUngroupedLinks();
-    }
+    // Render loaded state (or empty if new user)
+    renderGroups();
+    renderUngroupedLinks();
 
     updatePreview();
 }
