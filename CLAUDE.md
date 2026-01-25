@@ -81,6 +81,16 @@ Add to appropriate category in `ICON_LIBRARY`:
 ICON_LIBRARY.categoryName.push({ name: 'Icon Name', svg: '<svg>...</svg>' });
 ```
 
+### New App Preset
+Add to `APP_PRESETS` array:
+```javascript
+{ id: 'app-id', name: 'App Name', url: 'protocol:', category: 'Category Name', icon: '<svg>...</svg>' }
+```
+- Use Windows URI schemes where available (e.g., `calculator:`, `ms-settings:`)
+- For apps without URI schemes, use `shell:AppsFolder\...` paths
+- Icons should use `fill="currentColor"` for theme compatibility
+- Categories: `System Tools`, `Accessibility`, `Browsers`, `Print/Devices`
+
 ### New Configuration Field
 1. Add default to `DEFAULTS`
 2. Add input to appropriate tab in `index.html`

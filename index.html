@@ -117,6 +117,15 @@
                         <button type="button" class="btn btn-secondary" onclick="addUngroupedLink()" aria-describedby="ungrouped-description">
                             + Add Link
                         </button>
+                        <button type="button" class="btn btn-secondary" onclick="openPresetPicker()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            Add Preset
+                        </button>
                     </div>
                     </div>
                 </section>
@@ -566,6 +575,29 @@
                 </div>
                 <div id="iconPickerGrid" class="icon-picker-grid">
                     <!-- Icons rendered by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Preset Picker Modal -->
+    <div id="preset-picker-modal" class="preset-picker-overlay" role="dialog" aria-modal="true" aria-labelledby="preset-picker-title" hidden>
+        <div class="preset-picker-container">
+            <div class="preset-picker-header">
+                <h2 id="preset-picker-title">Add App Preset</h2>
+                <button type="button" class="preset-picker-close" onclick="closePresetPicker()" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="preset-picker-search">
+                <input type="text" id="preset-search" placeholder="Search apps..." oninput="filterPresets(this.value)">
+            </div>
+            <div class="preset-picker-body">
+                <div id="preset-grid" class="preset-grid">
+                    <!-- Populated by JavaScript -->
                 </div>
             </div>
         </div>

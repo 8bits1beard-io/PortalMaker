@@ -229,6 +229,36 @@ const ICON_LIBRARY = {
     }
 };
 
+// App Presets - Windows applications with URI schemes/shell paths
+const APP_PRESETS = [
+    // System Tools
+    { id: 'calculator', name: 'Calculator', url: 'calculator:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm4 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V7h2v2zm-8 8H6v-2h2v2zm0-4H6v-2h2v2zm0-4H6V7h2v2z"/></svg>' },
+    { id: 'notepad', name: 'Notepad', url: 'notepad:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>' },
+    { id: 'wordpad', name: 'WordPad', url: 'shell:AppsFolder\\Microsoft.Windows.WordPad_8wekyb3d8bbwe!Microsoft.WordPad', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 9H8v-2h5v2zm3 4H8v-2h8v2zm0 4H8v-2h8v2zm-3-12V3.5L18.5 9H13z"/></svg>' },
+    { id: 'paint', name: 'Paint', url: 'ms-paint:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M18 4V3c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1h12c.55 0 1-.45 1-1V6h1v4H9v11c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-9h8V4h-3z"/></svg>' },
+    { id: 'snipping-tool', name: 'Snipping Tool', url: 'ms-screenclip:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M9.64 7.64c.23-.5.36-1.05.36-1.64 0-2.21-1.79-4-4-4S2 3.79 2 6s1.79 4 4 4c.59 0 1.14-.13 1.64-.36L10 12l-2.36 2.36C7.14 14.13 6.59 14 6 14c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4c0-.59-.13-1.14-.36-1.64L12 14l7 7h3v-1L9.64 7.64zM6 8c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm0 12c-1.1 0-2-.89-2-2s.9-2 2-2 2 .89 2 2-.9 2-2 2zm6-7.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5.5.22.5.5-.22.5-.5.5zM19 3l-6 6 2 2 7-7V3h-3z"/></svg>' },
+    { id: 'task-manager', name: 'Task Manager', url: 'taskmgr:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>' },
+    { id: 'file-explorer', name: 'File Explorer', url: 'explorer.exe', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-6 10H6v-2h8v2zm4-4H6v-2h12v2z"/></svg>' },
+    { id: 'settings', name: 'Settings', url: 'ms-settings:', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.49.49 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96a.49.49 0 0 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>' },
+    { id: 'control-panel', name: 'Control Panel', url: 'control', category: 'System Tools', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9A1.5 1.5 0 1 1 8 10.5 1.5 1.5 0 0 1 6.5 9zm3.5 6.5A1.5 1.5 0 1 1 11.5 14 1.5 1.5 0 0 1 10 15.5zm2-4A1.5 1.5 0 1 1 13.5 10 1.5 1.5 0 0 1 12 11.5zm4.5 4A1.5 1.5 0 1 1 18 14a1.5 1.5 0 0 1-1.5 1.5zm0-6A1.5 1.5 0 1 1 18 8a1.5 1.5 0 0 1-1.5 1.5z"/></svg>' },
+
+    // Accessibility
+    { id: 'on-screen-keyboard', name: 'On-Screen Keyboard', url: 'osk:', category: 'Accessibility', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 5H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-3 0h2v2H5v-2zm0-3h2v2H5V8zm11 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>' },
+    { id: 'magnifier', name: 'Magnifier', url: 'magnify:', category: 'Accessibility', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/><path d="M12 10h-2v2H9v-2H7V9h2V7h1v2h2v1z"/></svg>' },
+    { id: 'narrator', name: 'Narrator', url: 'narrator:', category: 'Accessibility', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>' },
+
+    // Browsers
+    { id: 'microsoft-edge', name: 'Microsoft Edge', url: 'microsoft-edge:', category: 'Browsers', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12a9 9 0 0 1-9 9c-2.39 0-4.68-.94-6.36-2.64C4.27 17 3.5 15.08 3.5 13c0-2.65 1.11-5.18 3.07-7C8.77 4.14 11.57 3 14.5 3 18.09 3 21 5.91 21 9.5V12zm-9 7a7 7 0 0 0 7-7V9.5A5.5 5.5 0 0 0 13.5 4C11.17 4 9 5.04 7.54 6.79A7.46 7.46 0 0 0 5.5 13c0 1.52.57 3 1.64 4.17A7.022 7.022 0 0 0 12 19z"/></svg>' },
+    { id: 'google-chrome', name: 'Google Chrome', url: 'chrome:', category: 'Browsers', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-12c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z"/></svg>' },
+    { id: 'firefox', name: 'Firefox', url: 'firefox:', category: 'Browsers', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-2.52 1.17-4.77 3-6.24V10c0 2.21 1.79 4 4 4h2c.55 0 1 .45 1 1v2c0 1.1.9 2 2 2h1.17c-.98 2.36-3.3 4-6.17 4z"/></svg>' },
+    { id: 'brave', name: 'Brave', url: 'brave:', category: 'Browsers', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3zm0 18c-3.75-1.14-6-5.27-6-9.5V6.3l6-2.25 6 2.25v4.2c0 4.23-2.25 8.36-6 9.5z"/></svg>' },
+    { id: 'island', name: 'Island', url: 'island:', category: 'Browsers', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>' },
+
+    // Print/Devices
+    { id: 'print-queue', name: 'Print Queue', url: 'ms-settings:printers', category: 'Print/Devices', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>' },
+    { id: 'devices-printers', name: 'Devices & Printers', url: 'shell:PrintersFolder', category: 'Print/Devices', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>' }
+];
+
 // State variables for icon picker
 let iconPickerTarget = null;
 let iconPickerTriggerElement = null;
@@ -855,6 +885,88 @@ function selectIcon(categoryKey, iconKey) {
     }
 
     closeIconPicker();
+}
+
+// Open preset picker modal
+function openPresetPicker() {
+    const modal = document.getElementById('preset-picker-modal');
+    modal.hidden = false;
+    renderPresetPicker();
+    document.getElementById('preset-search').value = '';
+    document.getElementById('preset-search').focus();
+    document.addEventListener('keydown', handlePresetPickerKeydown);
+}
+
+// Close preset picker modal
+function closePresetPicker() {
+    const modal = document.getElementById('preset-picker-modal');
+    modal.hidden = true;
+    document.removeEventListener('keydown', handlePresetPickerKeydown);
+}
+
+// Handle keydown for preset picker (close on Escape)
+function handlePresetPickerKeydown(e) {
+    if (e.key === 'Escape') closePresetPicker();
+}
+
+// Render preset picker grid grouped by category
+function renderPresetPicker(filter = '') {
+    const grid = document.getElementById('preset-grid');
+    const normalizedFilter = filter.toLowerCase().trim();
+
+    // Filter presets
+    const filtered = APP_PRESETS.filter(p =>
+        p.name.toLowerCase().includes(normalizedFilter) ||
+        p.category.toLowerCase().includes(normalizedFilter)
+    );
+
+    // Group by category
+    const grouped = {};
+    filtered.forEach(preset => {
+        if (!grouped[preset.category]) grouped[preset.category] = [];
+        grouped[preset.category].push(preset);
+    });
+
+    // Render
+    let html = '';
+    for (const [category, presets] of Object.entries(grouped)) {
+        html += `<div class="preset-category">${escapeHtml(category)}</div>`;
+        presets.forEach(preset => {
+            html += `
+                <button type="button" class="preset-card" onclick="addPresetAsLink('${preset.id}')" title="${escapeHtml(preset.name)}">
+                    ${preset.icon}
+                    <span>${escapeHtml(preset.name)}</span>
+                </button>
+            `;
+        });
+    }
+
+    grid.innerHTML = html || '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">No apps found</p>';
+}
+
+// Filter presets based on search input
+function filterPresets(query) {
+    renderPresetPicker(query);
+}
+
+// Add preset as an ungrouped link
+function addPresetAsLink(presetId) {
+    const preset = APP_PRESETS.find(p => p.id === presetId);
+    if (!preset) return;
+
+    // Add as ungrouped link (same pattern as existing addUngroupedLink)
+    ungroupedLinks.push({
+        id: linkIdCounter++,
+        name: preset.name,
+        url: preset.url,
+        icon: preset.icon
+    });
+
+    closePresetPicker();
+    renderUngroupedLinks();
+    updatePreview();
+    saveState();
+    announce(`Added ${preset.name} to links`);
 }
 
 // Announce to screen readers
@@ -2893,6 +3005,12 @@ document.getElementById('instructionModal').addEventListener('click', function(e
 document.getElementById('iconPickerModal').addEventListener('click', function(e) {
     if (e.target === this) {
         closeIconPicker();
+    }
+});
+
+document.getElementById('preset-picker-modal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closePresetPicker();
     }
 });
 
