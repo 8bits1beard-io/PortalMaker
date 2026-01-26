@@ -7,7 +7,7 @@ const DEFAULTS = {
     pageTitle: 'Quick Links',
     greeting: '',
     greetingFontSize: '3',      // rem
-    greetingSpacing: '2.5',     // rem
+    greetingSpacing: '1',       // rem
     topLogoWidth: '360',        // px
     topLogoSpacing: '1.5',      // rem
     computerNamePosition: 'top-right',
@@ -2408,7 +2408,7 @@ function generateHTML(useComputerNameVariable = false) {
         .below-greeting-container {
             text-align: center;
             width: 100%;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .network-identifier {
