@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PortalMaker (v1.0.19) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
+PortalMaker (v1.0.20) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
 
 **Tech stack:** Vanilla JavaScript (ES6+), HTML5, CSS3 with custom properties. No build system, bundler, or package manager.
 

@@ -1,9 +1,8 @@
 // Default values
-const APP_VERSION = '1.0.19';
+const APP_VERSION = '1.0.20';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
-    colorOverrides: {},
     pageTitle: 'Quick Links',
     greeting: '',
     greetingFontSize: '3',      // rem
@@ -586,7 +585,7 @@ function selectTheme(themeKey) {
     renderThemeSwatches();
     renderAdvancedColors();
     updatePreview();
-    const themeName = themeKey === 'custom' ? 'Custom' : themes[themeKey].name;
+    const themeName = themeKey === 'custom' ? 'Custom' : (themes[themeKey]?.name || 'Unknown');
     announce(`${themeName} theme selected`);
 }
 
@@ -3126,11 +3125,15 @@ function generatePowerShellScript() {
     // Note: PowerShell single-quoted strings don't need backslash escaping
     let protocolHashtable = '';
     if (requiredProtocols.length > 0) {
-        const entries = requiredProtocols.map(p => {
-            const exePath = PROTOCOL_HANDLERS[p];
-            return `    '${p}' = '${exePath}'`;
-        });
-        protocolHashtable = `$protocolHandlers = @{\n${entries.join('\n')}\n}`;
+        const entries = requiredProtocols
+            .filter(p => PROTOCOL_HANDLERS[p]) // Filter out invalid protocols
+            .map(p => {
+                const exePath = PROTOCOL_HANDLERS[p];
+                return `    '${p}' = '${exePath}'`;
+            });
+        protocolHashtable = entries.length > 0
+            ? `$protocolHandlers = @{\n${entries.join('\n')}\n}`
+            : '$protocolHandlers = @{}';
     } else {
         protocolHashtable = '$protocolHandlers = @{}';
     }
@@ -3793,36 +3796,6 @@ function applyImportedConfig(config) {
     updatePreview();
     saveState();
     validateUrlInput(document.getElementById('autoRefreshUrl'));
-}
-
-// Load a quick start template
-function loadTemplate(templateKey) {
-    const template = TEMPLATES[templateKey];
-    if (!template) return;
-
-    const hasExistingContent = groups.length > 0 || ungroupedLinks.length > 0 || localStorage.getItem(STORAGE_KEY);
-    if (hasExistingContent) {
-        const message = `Load the "${template.name}" template? This will replace your current configuration.`;
-        if (!confirm(message)) return;
-    }
-
-    groups = [];
-    ungroupedLinks = [];
-    groupIdCounter = 0;
-    linkIdCounter = 0;
-    selectedTheme = DEFAULTS.theme;
-    customColors = { ...DEFAULTS.customColors };
-
-    if (template.scriptName) {
-        document.getElementById('scriptName').value = template.scriptName;
-    }
-
-    if (template.destinationPath) {
-        document.getElementById('destinationPath').value = template.destinationPath;
-    }
-
-    applyImportedConfig(template.config);
-    announce(`${template.name} template loaded`);
 }
 
 // Reset everything to defaults

@@ -1,6 +1,6 @@
 # PortalMaker
 
-**Version:** 1.0.19
+**Version:** 1.0.20
 **Author:** Joshua Walderbach
 
 > Design branded portal pages for kiosks and curated user experiences. Visual editor with live preview and enterprise deployment.
