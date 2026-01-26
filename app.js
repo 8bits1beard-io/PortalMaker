@@ -7,7 +7,7 @@ const DEFAULTS = {
     pageTitle: 'Quick Links',
     greeting: '',
     greetingFontSize: '3',      // rem
-    greetingSpacing: '1',       // rem
+    greetingSpacing: '0.25',    // rem
     topLogoWidth: '360',        // px
     topLogoSpacing: '1.5',      // rem
     computerNamePosition: 'top-right',
