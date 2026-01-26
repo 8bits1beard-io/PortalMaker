@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.0';
+const APP_VERSION = '1.0.1';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -1990,8 +1990,8 @@ function renderGroups() {
                                    onchange="handleLinkIconUpload('group', ${group.id}, ${link.id}, this)" class="visually-hidden">
                         </label>
                         <button type="button" class="btn btn-sm" onclick="clearLinkIcon('group', ${group.id}, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
-                        <input type="url" id="link-url-${group.id}-${link.id}" value="${escapeHtml(link.url || '')}"
-                               placeholder="https://example.com"
+                        <input type="text" id="link-url-${group.id}-${link.id}" value="${escapeHtml(link.url || '')}"
+                               placeholder="https://example.com or app:"
                                aria-label="Link URL"
                                onchange="updateGroupLink(${group.id}, ${link.id}, 'url', this.value)"
                                onblur="validateUrlInput(this)">
@@ -2054,8 +2054,8 @@ function renderUngroupedLinks() {
                        onchange="handleLinkIconUpload('ungrouped', 0, ${link.id}, this)" class="visually-hidden">
             </label>
             <button type="button" class="btn btn-sm" onclick="clearLinkIcon('ungrouped', 0, ${link.id})" aria-label="Clear icon" title="Clear">✕</button>
-            <input type="url" id="ungrouped-url-${link.id}" value="${escapeHtml(link.url || '')}"
-                   placeholder="https://example.com"
+            <input type="text" id="ungrouped-url-${link.id}" value="${escapeHtml(link.url || '')}"
+                   placeholder="https://example.com or app:"
                    aria-label="Link URL"
                    onchange="updateUngroupedLink(${link.id}, 'url', this.value)"
                    onblur="validateUrlInput(this)">
