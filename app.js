@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.12';
+const APP_VERSION = '1.0.13';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -2579,8 +2579,7 @@ function generateHTML(useComputerNameVariable = false) {
             max-width: 1400px;
             padding: 0 1rem;
             display: grid;
-            grid-template-columns: repeat(${gridColumns}, 1fr);
-            justify-content: center;
+            grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
             gap: 1.5rem;
         }
 
@@ -2624,6 +2623,7 @@ function generateHTML(useComputerNameVariable = false) {
         }
 
         .standalone-links {
+            grid-column: 1 / -1;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
