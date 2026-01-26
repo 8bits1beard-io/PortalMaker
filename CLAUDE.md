@@ -86,10 +86,19 @@ Add to `APP_PRESETS` array:
 ```javascript
 { id: 'app-id', name: 'App Name', url: 'protocol:', category: 'Category Name', icon: '<svg>...</svg>' }
 ```
-- Use Windows URI schemes where available (e.g., `calculator:`, `ms-settings:`)
-- For apps without URI schemes, use `shell:AppsFolder\...` paths
+- Use Windows URI schemes where available (e.g., `calculator:`, `ms-settings:`, `ms-paint:`)
+- For apps without native URI schemes, add to `PROTOCOL_HANDLERS` and use `PortalMaker-appname:` format
 - Icons should use `fill="currentColor"` for theme compatibility
 - Categories: `System Tools`, `Accessibility`, `Browsers`, `Print/Devices`
+
+### New Protocol Handler
+For Windows apps without native URI schemes, add to `PROTOCOL_HANDLERS`:
+```javascript
+PROTOCOL_HANDLERS['PortalMaker-myapp'] = 'C:\\Path\\To\\app.exe';
+```
+Then reference in `APP_PRESETS` with url: `PortalMaker-myapp:`
+
+The PowerShell deployment script registers these as custom URL protocols and optionally configures Edge/Chrome to suppress the "Open app?" confirmation dialogs.
 
 ### New Configuration Field
 1. Add default to `DEFAULTS`

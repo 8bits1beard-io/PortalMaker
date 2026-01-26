@@ -85,16 +85,23 @@ Pre-configured Windows applications you can add with one click:
 
 **Custom Applications:** Create your own application shortcuts with custom names, URLs/commands, categories, and icons. Custom applications persist across sessions and can be exported/imported with your configuration.
 
-Applications use Windows URI schemes (e.g., `calculator:`, `ms-settings:`) and are fully editable after adding.
+Applications use Windows URI schemes (e.g., `calculator:`, `ms-settings:`) or custom `PortalMaker-*` protocols for legacy apps. Custom protocols are registered by the PowerShell deployment script.
 
 ## Download Options
 
 | Option | Use Case |
 |--------|----------|
-| **PowerShell Script** | Run directly on target devices, package as an Intune Win32 app, or use in an SCCM Task Sequence. Filename: `Generate-Portal_[ScriptName].ps1`. |
+| **PowerShell Script** | Deploy to target devices via Intune, SCCM, or direct execution. Filename: `Generate-Portal_[ScriptName].ps1`. |
 | **Save Configuration** | Save settings as JSON file for backup or sharing. |
 | **Load Configuration** | Import a previously saved configuration. |
 | **Reset Everything** | Clear all settings and start fresh. |
+
+### PowerShell Script Features
+
+- **Install:** `.\Generate-Portal_MyPortal.ps1` - Creates HTML file, registers protocol handlers, configures browser policies
+- **Uninstall:** `.\Generate-Portal_MyPortal.ps1 -Uninstall` - Removes HTML file, protocol handlers, and browser policies
+- **Protocol Handlers:** Registers `PortalMaker-*` custom protocols for legacy Windows apps (Notepad, Task Manager, etc.)
+- **Browser Prompts:** Optionally configures Edge/Chrome policies to suppress "Open app?" confirmation dialogs
 
 See [DEPLOYMENT.md](DEPLOYMENT.md) for enterprise deployment instructions.
 
