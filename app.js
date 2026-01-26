@@ -2401,14 +2401,14 @@ function generateHTML(useComputerNameVariable = false) {
         .network-identifier.below-greeting {
             position: static;
             display: inline-block;
-            margin: 0.5rem auto 1rem;
+            margin: 0 auto;
             text-align: center;
         }
 
         .below-greeting-container {
             text-align: center;
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .network-identifier {
