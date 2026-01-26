@@ -126,6 +126,16 @@
                     </div>
                     </div>
                 </section>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">
+
+                <div class="form-group">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="suppressProtocolPrompts" checked>
+                        <span>Suppress browser protocol prompts</span>
+                    </label>
+                    <small class="form-hint">Configures Edge/Chrome to launch app links without confirmation dialogs</small>
+                </div>
                 </div>
 
                 <!-- Style Tab -->
@@ -508,13 +518,6 @@
                         <label for="destinationPath">Destination Path</label>
                         <input type="text" id="destinationPath" value="C:\ProgramData\PortalMaker\index.html" placeholder="C:\ProgramData\PortalMaker\index.html">
                         <small class="form-hint">Where the portal HTML file will be saved on target machines</small>
-                    </div>
-                    <div class="form-group">
-                        <label class="toggle-label">
-                            <input type="checkbox" id="suppressProtocolPrompts" checked>
-                            <span>Suppress browser protocol prompts</span>
-                        </label>
-                        <small class="form-hint">Configures Edge/Chrome to launch app links without confirmation dialogs</small>
                     </div>
                 </fieldset>
 
