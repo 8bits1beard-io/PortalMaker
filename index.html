@@ -379,7 +379,7 @@
 
                         <div class="form-group">
                             <label for="networkIdentifierPattern">Pattern</label>
-                            <input type="text" id="networkIdentifierPattern" value=".*s0(\d{4})\.(\w+)\..*" oninput="updatePreview()">
+                            <input type="text" id="networkIdentifierPattern" value="^[^.]+\.([^.]+)\.([^.]+)\..*" oninput="updatePreview()">
                             <small style="color: var(--text-secondary);">Regex pattern with capture groups. Select which group to display above.</small>
                         </div>
 

@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.7';
+const APP_VERSION = '1.0.8';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -14,7 +14,7 @@ const DEFAULTS = {
     computerNameFormat: 'hostname',
     networkIdentifierPosition: 'top-left',
     networkIdentifierDisplay: '1',
-    networkIdentifierPattern: '.*s0(\\d+)\\.(\\w+)\\..*',
+    networkIdentifierPattern: '^[^.]+\\.([^.]+)\\.([^.]+)\\..*',
     networkIdentifierFallback: 'Unknown',
     dateTimeFormat: 'both',
     dateTimePosition: 'top-left',
