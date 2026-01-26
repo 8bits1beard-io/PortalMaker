@@ -2408,7 +2408,7 @@ function generateHTML(useComputerNameVariable = false) {
         .below-greeting-container {
             text-align: center;
             width: 100%;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .network-identifier {
