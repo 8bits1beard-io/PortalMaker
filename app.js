@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.9';
+const APP_VERSION = '1.0.10';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -989,10 +989,17 @@ function renderPresetPicker(filter = '') {
         html += `<div class="preset-category">${escapeHtml(category)}</div>`;
         presets.forEach(preset => {
             const isCustom = preset.isCustom === true;
+            // Get executable path for protocol handler apps
+            let exePath = '';
+            if (preset.url && preset.url.startsWith('PortalMaker-') && preset.url.endsWith(':')) {
+                const protocolName = preset.url.slice(0, -1);
+                exePath = PROTOCOL_HANDLERS[protocolName] || '';
+            }
             html += `
-                <button type="button" class="preset-card ${isCustom ? 'preset-card-custom' : ''}" onclick="addPresetAsLink('${preset.id}')" title="${escapeHtml(preset.name)}">
+                <button type="button" class="preset-card ${isCustom ? 'preset-card-custom' : ''}" onclick="addPresetAsLink('${preset.id}')" title="${escapeHtml(preset.name)}${exePath ? '\n' + exePath : ''}">
                     ${preset.icon || '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'}
                     <span>${escapeHtml(preset.name)}</span>
+                    ${exePath ? `<small class="preset-exe-path">${escapeHtml(exePath)}</small>` : ''}
                     ${isCustom ? `
                         <div class="preset-card-actions" onclick="event.stopPropagation()">
                             <button type="button" class="preset-action-btn" onclick="editCustomPreset('${preset.id}')" title="Edit" aria-label="Edit ${escapeHtml(preset.name)}">

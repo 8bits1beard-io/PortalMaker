@@ -1549,6 +1549,15 @@ footer a:hover {
     color: var(--text-primary);
 }
 
+.preset-exe-path {
+    font-size: 0.625rem;
+    color: var(--text-secondary);
+    word-break: break-all;
+    line-height: 1.2;
+    max-width: 100%;
+    opacity: 0.8;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .preset-picker-close,
     .preset-card {
