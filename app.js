@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.11';
+const APP_VERSION = '1.0.12';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -2578,15 +2578,13 @@ function generateHTML(useComputerNameVariable = false) {
             width: 100%;
             max-width: 1400px;
             padding: 0 1rem;
-            display: flex;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(${gridColumns}, 1fr);
             justify-content: center;
             gap: 1.5rem;
         }
 
         .link-group {
-            flex: 0 1 280px;
-            max-width: 350px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 1.25rem;
@@ -2710,9 +2708,8 @@ function generateHTML(useComputerNameVariable = false) {
         }
 
         @media (max-width: 600px) {
-            .link-group {
-                flex: 1 1 100%;
-                max-width: none;
+            .links-container {
+                grid-template-columns: 1fr;
             }
             .greeting-text {
                 font-size: 2rem;
@@ -2721,13 +2718,11 @@ function generateHTML(useComputerNameVariable = false) {
 
         /* Layout variations */
         .links-container.layout-list {
-            flex-direction: column;
+            grid-template-columns: 1fr;
             max-width: 800px;
         }
 
         .links-container.layout-list .link-group {
-            flex: 1 1 100%;
-            max-width: none;
             background-color: transparent;
             padding: 0;
             margin-bottom: 1.5rem;
@@ -3027,9 +3022,9 @@ function updatePreview() {
     const bannerEnabled = document.getElementById('bannerEnabled').checked;
     document.getElementById('bannerOptionsGroup').style.display = bannerEnabled ? 'block' : 'none';
 
-    // Toggle grid columns visibility
+    // Toggle grid columns visibility (show for cards and grid layouts)
     const linkLayout = document.getElementById('linkLayout').value;
-    document.getElementById('gridColumnsGroup').style.display = linkLayout === 'grid' ? 'block' : 'none';
+    document.getElementById('gridColumnsGroup').style.display = linkLayout !== 'list' ? 'block' : 'none';
 
     // Save state to localStorage
     saveState();
