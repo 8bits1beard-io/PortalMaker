@@ -273,6 +273,23 @@ let saveIndicatorTimeout = null;
 let debounceTimer = null;
 let modalTriggerElement = null;
 
+// Custom presets state
+let customPresets = [];
+let customPresetIdCounter = 0;
+let editingPresetId = null;
+
+// Get all presets (built-in + custom)
+function getAllPresets() {
+    return [...APP_PRESETS, ...customPresets];
+}
+
+// Get unique categories from all presets
+function getPresetCategories() {
+    const categories = new Set();
+    getAllPresets().forEach(p => categories.add(p.category));
+    return Array.from(categories).sort();
+}
+
 // Debounced update preview for input events
 function debouncedUpdatePreview() {
     clearTimeout(debounceTimer);
@@ -856,6 +873,15 @@ function selectIcon(categoryKey, iconKey) {
     const dataUri = svgToDataUri(icon.svg);
     const { iconType, targetType, groupId, linkId } = iconPickerTarget;
 
+    // Handle preset icon selection
+    if (iconType === 'preset') {
+        document.getElementById('customPresetIcon').value = icon.svg;
+        updatePresetIconPreview();
+        closeIconPicker();
+        announce(`Selected ${icon.name} icon`);
+        return;
+    }
+
     if (iconType === 'group') {
         const group = groups.find(g => g.id === groupId);
         if (group) {
@@ -920,8 +946,9 @@ function renderPresetPicker(filter = '') {
     const grid = document.getElementById('preset-grid');
     const normalizedFilter = filter.toLowerCase().trim();
 
-    // Filter presets
-    const filtered = APP_PRESETS.filter(p =>
+    // Filter presets (built-in + custom)
+    const allPresets = getAllPresets();
+    const filtered = allPresets.filter(p =>
         p.name.toLowerCase().includes(normalizedFilter) ||
         p.category.toLowerCase().includes(normalizedFilter)
     );
@@ -933,21 +960,42 @@ function renderPresetPicker(filter = '') {
         grouped[preset.category].push(preset);
     });
 
-    // Render
-    let html = '';
+    // Render - start with Create Custom button
+    let html = `
+        <button type="button" class="preset-create-btn" onclick="openCustomPresetForm()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Create Custom Application</span>
+        </button>
+    `;
+
     for (const [category, presets] of Object.entries(grouped)) {
         html += `<div class="preset-category">${escapeHtml(category)}</div>`;
         presets.forEach(preset => {
+            const isCustom = preset.isCustom === true;
             html += `
-                <button type="button" class="preset-card" onclick="addPresetAsLink('${preset.id}')" title="${escapeHtml(preset.name)}">
-                    ${preset.icon}
+                <button type="button" class="preset-card ${isCustom ? 'preset-card-custom' : ''}" onclick="addPresetAsLink('${preset.id}')" title="${escapeHtml(preset.name)}">
+                    ${preset.icon || '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>'}
                     <span>${escapeHtml(preset.name)}</span>
+                    ${isCustom ? `
+                        <div class="preset-card-actions" onclick="event.stopPropagation()">
+                            <button type="button" class="preset-action-btn" onclick="editCustomPreset('${preset.id}')" title="Edit" aria-label="Edit ${escapeHtml(preset.name)}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                            </button>
+                            <button type="button" class="preset-action-btn preset-action-delete" onclick="deleteCustomPreset('${preset.id}')" title="Delete" aria-label="Delete ${escapeHtml(preset.name)}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                            </button>
+                        </div>
+                    ` : ''}
                 </button>
             `;
         });
     }
 
-    grid.innerHTML = html || '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">No apps found</p>';
+    if (Object.keys(grouped).length === 0) {
+        html += '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">No apps found</p>';
+    }
+
+    grid.innerHTML = html;
 }
 
 // Filter presets based on search input
@@ -957,7 +1005,7 @@ function filterPresets(query) {
 
 // Add preset as a link (to group or ungrouped)
 function addPresetAsLink(presetId) {
-    const preset = APP_PRESETS.find(p => p.id === presetId);
+    const preset = getAllPresets().find(p => p.id === presetId);
     if (!preset) return;
 
     const newLink = {
@@ -985,6 +1033,142 @@ function addPresetAsLink(presetId) {
     closePresetPicker();
     updatePreview();
     saveState();
+}
+
+// Open custom preset form (for create or edit)
+function openCustomPresetForm(presetId = null) {
+    editingPresetId = presetId;
+    const modal = document.getElementById('custom-preset-modal');
+    const title = document.getElementById('custom-preset-title');
+
+    // Populate category datalist
+    const datalist = document.getElementById('preset-categories-list');
+    datalist.innerHTML = getPresetCategories().map(c => `<option value="${escapeHtml(c)}">`).join('');
+
+    if (presetId) {
+        // Edit mode - populate form
+        const preset = customPresets.find(p => p.id === presetId);
+        if (preset) {
+            title.textContent = 'Edit Custom Application';
+            document.getElementById('customPresetName').value = preset.name;
+            document.getElementById('customPresetUrl').value = preset.url;
+            document.getElementById('customPresetCategory').value = preset.category;
+            document.getElementById('customPresetIcon').value = preset.icon;
+            updatePresetIconPreview();
+        }
+    } else {
+        // Create mode - clear form
+        title.textContent = 'Create Custom Application';
+        document.getElementById('customPresetName').value = '';
+        document.getElementById('customPresetUrl').value = '';
+        document.getElementById('customPresetCategory').value = '';
+        document.getElementById('customPresetIcon').value = '';
+        document.getElementById('customPresetIconPreview').innerHTML = '';
+    }
+
+    modal.hidden = false;
+    document.getElementById('customPresetName').focus();
+    document.addEventListener('keydown', handleCustomPresetKeydown);
+}
+
+// Close custom preset form
+function closeCustomPresetForm() {
+    document.getElementById('custom-preset-modal').hidden = true;
+    editingPresetId = null;
+    document.removeEventListener('keydown', handleCustomPresetKeydown);
+}
+
+// Handle keydown for custom preset form
+function handleCustomPresetKeydown(e) {
+    if (e.key === 'Escape') closeCustomPresetForm();
+}
+
+// Update icon preview in custom preset form
+function updatePresetIconPreview() {
+    const iconInput = document.getElementById('customPresetIcon').value.trim();
+    const preview = document.getElementById('customPresetIconPreview');
+
+    if (iconInput && iconInput.startsWith('<svg')) {
+        preview.innerHTML = iconInput;
+    } else {
+        preview.innerHTML = '';
+    }
+}
+
+// Save custom preset (create or update)
+function saveCustomPreset() {
+    const name = document.getElementById('customPresetName').value.trim();
+    const url = document.getElementById('customPresetUrl').value.trim();
+    const category = document.getElementById('customPresetCategory').value.trim() || 'Custom';
+    const icon = document.getElementById('customPresetIcon').value.trim();
+
+    if (!name) {
+        alert('Please enter an application name.');
+        document.getElementById('customPresetName').focus();
+        return;
+    }
+
+    if (!url) {
+        alert('Please enter a URL or URI scheme.');
+        document.getElementById('customPresetUrl').focus();
+        return;
+    }
+
+    if (editingPresetId) {
+        // Update existing preset
+        const preset = customPresets.find(p => p.id === editingPresetId);
+        if (preset) {
+            preset.name = name;
+            preset.url = url;
+            preset.category = category;
+            preset.icon = icon;
+            announce(`Updated ${name}`);
+        }
+    } else {
+        // Create new preset
+        const newPreset = {
+            id: 'custom-' + customPresetIdCounter++,
+            name: name,
+            url: url,
+            category: category,
+            icon: icon,
+            isCustom: true
+        };
+        customPresets.push(newPreset);
+        announce(`Created ${name}`);
+    }
+
+    closeCustomPresetForm();
+    renderPresetPicker(document.getElementById('preset-search').value);
+    saveState();
+}
+
+// Edit a custom preset
+function editCustomPreset(presetId) {
+    openCustomPresetForm(presetId);
+}
+
+// Delete a custom preset
+function deleteCustomPreset(presetId) {
+    const preset = customPresets.find(p => p.id === presetId);
+    if (!preset) return;
+
+    if (!confirm(`Delete "${preset.name}"?`)) return;
+
+    customPresets = customPresets.filter(p => p.id !== presetId);
+    renderPresetPicker(document.getElementById('preset-search').value);
+    saveState();
+    announce(`Deleted ${preset.name}`);
+}
+
+// Open icon picker for custom preset form
+function openIconPickerForPreset() {
+    iconPickerTarget = { iconType: 'preset' };
+    iconPickerTriggerElement = document.querySelector('#custom-preset-modal .btn-secondary');
+    renderIconPickerGrid();
+    document.getElementById('iconSearchInput').value = '';
+    document.getElementById('iconPickerModal').classList.add('visible');
+    document.getElementById('iconSearchInput').focus();
 }
 
 // Announce to screen readers
@@ -1099,6 +1283,8 @@ function saveState() {
         selectedTheme,
         customColors,
         colorOverrides,
+        customPresets,
+        customPresetIdCounter,
         settings: {
             pageTitle: document.getElementById('pageTitle').value,
             greeting: document.getElementById('greeting').value,
@@ -1195,6 +1381,17 @@ function loadState() {
             customColors = state.customColors || { primary: '#0053E2', accent: '#FFC220' };
             colorOverrides = state.colorOverrides || {};
 
+            // Restore custom presets
+            customPresets = (state.customPresets || []).map(p => ({
+                id: p.id,
+                name: p.name || '',
+                url: p.url || '',
+                category: p.category || 'Custom',
+                icon: p.icon || '',
+                isCustom: true
+            }));
+            customPresetIdCounter = state.customPresetIdCounter || 0;
+
             // Restore form settings
             if (state.settings) {
                 document.getElementById('pageTitle').value = state.settings.pageTitle || 'Quick Links';
@@ -1282,6 +1479,11 @@ function init() {
     // Render loaded state (or empty if new user)
     renderGroups();
     renderUngroupedLinks();
+
+    // Close custom preset modal when clicking outside
+    document.getElementById('custom-preset-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeCustomPresetForm();
+    });
 
     updatePreview();
 }
@@ -1784,15 +1986,15 @@ function renderGroups() {
                         </button>
                     </div>
                 `).join('')}
-                <button type="button" class="btn btn-secondary btn-sm" onclick="addLinkToGroup(${group.id})" aria-label="Add link to ${escapeHtml(group.name) || 'this group'}">+ Add Link</button>
-                <button type="button" class="btn btn-secondary btn-sm" onclick="openPresetPicker(${group.id})" aria-label="Add preset to ${escapeHtml(group.name) || 'this group'}">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="addLinkToGroup(${group.id})" aria-label="Add URL to ${escapeHtml(group.name) || 'this group'}">+ Add URL</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="openPresetPicker(${group.id})" aria-label="Add application to ${escapeHtml(group.name) || 'this group'}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align: -1px;">
                         <rect x="3" y="3" width="7" height="7"></rect>
                         <rect x="14" y="3" width="7" height="7"></rect>
                         <rect x="14" y="14" width="7" height="7"></rect>
                         <rect x="3" y="14" width="7" height="7"></rect>
                     </svg>
-                    Add Preset
+                    Add Application
                 </button>
             </div>
         </fieldset>
@@ -3298,6 +3500,18 @@ function applyImportedConfig(config) {
         renderUngroupedLinks();
     }
 
+    // Apply custom presets
+    if (config.customPresets) {
+        customPresets = config.customPresets.map(p => ({
+            id: 'custom-' + customPresetIdCounter++,
+            name: p.name,
+            url: p.url || '',
+            category: p.category || 'Custom',
+            icon: p.icon || '',
+            isCustom: true
+        }));
+    }
+
     updatePreview();
     saveState();
     validateUrlInput(document.getElementById('autoRefreshUrl'));
@@ -3349,6 +3563,8 @@ function resetAll() {
     linkIdCounter = 0;
     selectedTheme = DEFAULTS.theme;
     customColors = { ...DEFAULTS.customColors };
+    customPresets = [];
+    customPresetIdCounter = 0;
 
     // Reset form fields to defaults
     document.getElementById('pageTitle').value = DEFAULTS.pageTitle;

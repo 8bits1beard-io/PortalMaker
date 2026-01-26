@@ -16,7 +16,7 @@
 - **Color Themes** - 20 preset WCAG-compliant themes plus custom colors
 - **Advanced Colors** - Override individual colors (background, text, links, hover states)
 - **Icon Library** - 40+ built-in SVG icons for groups and links
-- **App Presets** - 21 pre-configured Windows apps (browsers, system tools, accessibility) with one-click add
+- **App Presets** - 21 built-in Windows apps plus custom user-defined applications
 - **Link Layouts** - Cards, List, or Grid display with configurable columns
 - **Button Styles** - Rounded, Square, or Text-only link buttons
 - **Button Sizes** - Small, Medium, or Large button sizing
@@ -68,11 +68,11 @@ Choose from 20 preset themes or create custom colors:
 ### Links
 
 - **Add Group** - Create categorized link sections with optional icons
-- **Add Link** - Add links to a group or as standalone (ungrouped)
-- **Add Preset** - Quick-add common Windows apps from a searchable picker
+- **Add URL** - Add web links to a group or as standalone (ungrouped)
+- **Add Application** - Quick-add Windows apps from a searchable picker
 - **Drag handles** - Use ⋮⋮ (groups) or ⋮ (links) to reorder
 
-### App Presets
+### Applications
 
 Pre-configured Windows applications you can add with one click:
 
@@ -83,7 +83,9 @@ Pre-configured Windows applications you can add with one click:
 | **Browsers** | Microsoft Edge, Google Chrome, Firefox, Brave, Island |
 | **Print/Devices** | Print Queue, Devices & Printers |
 
-Presets use Windows URI schemes (e.g., `calculator:`, `ms-settings:`) and are fully editable after adding.
+**Custom Applications:** Create your own application shortcuts with custom names, URLs/commands, categories, and icons. Custom applications persist across sessions and can be exported/imported with your configuration.
+
+Applications use Windows URI schemes (e.g., `calculator:`, `ms-settings:`) and are fully editable after adding.
 
 ## Download Options
 

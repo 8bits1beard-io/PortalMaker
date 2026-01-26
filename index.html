@@ -112,7 +112,7 @@
 
                     <div class="actions-bar">
                         <button type="button" class="btn btn-secondary" onclick="addUngroupedLink()" aria-describedby="ungrouped-description">
-                            + Add Link
+                            + Add URL
                         </button>
                         <button type="button" class="btn btn-secondary" onclick="openPresetPicker()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -121,7 +121,7 @@
                                 <rect x="14" y="14" width="7" height="7"></rect>
                                 <rect x="3" y="14" width="7" height="7"></rect>
                             </svg>
-                            Add Preset
+                            Add Application
                         </button>
                     </div>
                     </div>
@@ -581,7 +581,7 @@
     <div id="preset-picker-modal" class="preset-picker-overlay" role="dialog" aria-modal="true" aria-labelledby="preset-picker-title" hidden>
         <div class="preset-picker-container">
             <div class="preset-picker-header">
-                <h2 id="preset-picker-title">Add App Preset</h2>
+                <h2 id="preset-picker-title">Add Application</h2>
                 <button type="button" class="preset-picker-close" onclick="closePresetPicker()" aria-label="Close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -596,6 +596,51 @@
                 <div id="preset-grid" class="preset-grid">
                     <!-- Populated by JavaScript -->
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Preset Form Modal -->
+    <div id="custom-preset-modal" class="preset-picker-overlay" role="dialog" aria-modal="true" aria-labelledby="custom-preset-title" hidden>
+        <div class="preset-picker-container custom-preset-form-container">
+            <div class="preset-picker-header">
+                <h2 id="custom-preset-title">Create Custom Application</h2>
+                <button type="button" class="preset-picker-close" onclick="closeCustomPresetForm()" aria-label="Close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="preset-picker-body">
+                <div class="form-group">
+                    <label for="customPresetName">Name <span class="required">*</span></label>
+                    <input type="text" id="customPresetName" placeholder="My Application" required>
+                </div>
+                <div class="form-group">
+                    <label for="customPresetUrl">URL / Command <span class="required">*</span></label>
+                    <input type="text" id="customPresetUrl" placeholder="myapp: or https://example.com" required>
+                    <small class="help-text">Examples: calculator:, ms-settings:, https://example.com, notepad.exe</small>
+                </div>
+                <div class="form-group">
+                    <label for="customPresetCategory">Category</label>
+                    <input type="text" id="customPresetCategory" placeholder="Custom" list="preset-categories-list">
+                    <datalist id="preset-categories-list">
+                        <!-- Populated by JavaScript -->
+                    </datalist>
+                </div>
+                <div class="form-group">
+                    <label for="customPresetIcon">Icon (SVG)</label>
+                    <div class="custom-preset-icon-row">
+                        <input type="text" id="customPresetIcon" placeholder="Paste SVG or select from library" oninput="updatePresetIconPreview()">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="openIconPickerForPreset()" title="Choose from library">Library</button>
+                    </div>
+                    <div id="customPresetIconPreview" class="icon-preview"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeCustomPresetForm()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="saveCustomPreset()">Save</button>
             </div>
         </div>
     </div>
