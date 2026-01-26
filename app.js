@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.13';
+const APP_VERSION = '1.0.14';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -25,10 +25,10 @@ const DEFAULTS = {
     scriptName: 'MyPortal',
     suppressProtocolPrompts: true,
     // Link layout options
-    linkLayout: 'cards',
+    linkLayout: 'grid',
     buttonStyle: 'rounded',
     buttonSize: 'medium',
-    gridColumns: '3',
+    gridColumns: '4',
     // Announcement banner
     bannerEnabled: false,
     bannerTitle: '',
@@ -1299,7 +1299,8 @@ function saveState() {
         id: link.id,
         name: link.name || '',
         url: link.url || '',
-        icon: link.icon || ''
+        icon: link.icon || '',
+        tooltip: link.tooltip || ''
     });
 
     const cleanedGroups = groups.map(g => ({
@@ -1903,7 +1904,7 @@ function updateGroupName(groupId, name) {
 // Update link in group
 function updateGroupLink(groupId, linkId, field, value) {
     // Only allow valid link fields
-    const validFields = ['name', 'url', 'icon'];
+    const validFields = ['name', 'url', 'icon', 'tooltip'];
     if (!validFields.includes(field)) return;
 
     const group = groups.find(g => g.id === groupId);
@@ -1938,7 +1939,7 @@ function removeUngroupedLink(linkId) {
 // Update ungrouped link
 function updateUngroupedLink(linkId, field, value) {
     // Only allow valid link fields
-    const validFields = ['name', 'url', 'icon'];
+    const validFields = ['name', 'url', 'icon', 'tooltip'];
     if (!validFields.includes(field)) return;
 
     const link = ungroupedLinks.find(l => l.id === linkId);
@@ -2025,6 +2026,11 @@ function renderGroups() {
                                aria-label="Link URL"
                                onchange="updateGroupLink(${group.id}, ${link.id}, 'url', this.value)"
                                onblur="validateUrlInput(this)">
+                        <input type="text" id="link-tooltip-${group.id}-${link.id}" value="${escapeHtml(link.tooltip || '')}"
+                               placeholder="Tooltip (optional)"
+                               aria-label="Tooltip text shown on hover"
+                               class="link-tooltip-input"
+                               onchange="updateGroupLink(${group.id}, ${link.id}, 'tooltip', this.value)">
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeLinkFromGroup(${group.id}, ${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                             <span aria-hidden="true">X</span>
                             <span class="visually-hidden">Remove</span>
@@ -2089,6 +2095,11 @@ function renderUngroupedLinks() {
                    aria-label="Link URL"
                    onchange="updateUngroupedLink(${link.id}, 'url', this.value)"
                    onblur="validateUrlInput(this)">
+            <input type="text" id="ungrouped-tooltip-${link.id}" value="${escapeHtml(link.tooltip || '')}"
+                   placeholder="Tooltip (optional)"
+                   aria-label="Tooltip text shown on hover"
+                   class="link-tooltip-input"
+                   onchange="updateUngroupedLink(${link.id}, 'tooltip', this.value)">
             <button type="button" class="btn btn-danger btn-sm" onclick="removeUngroupedLink(${link.id})" aria-label="Remove link ${escapeHtml(link.name) || linkIndex + 1}">
                 <span aria-hidden="true">X</span>
                 <span class="visually-hidden">Remove</span>
@@ -2177,7 +2188,8 @@ function generateHTML(useComputerNameVariable = false) {
                     ${validLinks.map(link => {
                         const href = escapeHtml(link.url);
                         const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
-                        return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}">${iconHtml}${escapeHtml(link.name)}</a></li>`;
+                        const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
+                        return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}"${titleAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
                 </ul>
             </section>`;
@@ -2192,7 +2204,8 @@ function generateHTML(useComputerNameVariable = false) {
                 ${validUngrouped.map(link => {
                     const href = escapeHtml(link.url);
                     const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
-                    return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}">${iconHtml}${escapeHtml(link.name)}</a>`;
+                    const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
+                    return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}"${titleAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
                 }).join('')}
             </div>`;
     }
@@ -2286,13 +2299,15 @@ function generateHTML(useComputerNameVariable = false) {
             links: g.links.map(l => ({
                 name: l.name,
                 url: l.url || '',
-                icon: l.icon || ''
+                icon: l.icon || '',
+                tooltip: l.tooltip || ''
             }))
         })),
         ungroupedLinks: ungroupedLinks.map(l => ({
             name: l.name,
             url: l.url || '',
-            icon: l.icon || ''
+            icon: l.icon || '',
+            tooltip: l.tooltip || ''
         }))
     };
     const configJson = JSON.stringify(config);
@@ -3704,7 +3719,8 @@ function applyImportedConfig(config) {
                 id: linkIdCounter++,
                 name: l.name,
                 url: l.url || '',
-                icon: l.icon || ''
+                icon: l.icon || '',
+                tooltip: l.tooltip || ''
             }))
         }));
         renderGroups();
@@ -3716,7 +3732,8 @@ function applyImportedConfig(config) {
             id: linkIdCounter++,
             name: l.name,
             url: l.url || '',
-            icon: l.icon || ''
+            icon: l.icon || '',
+            tooltip: l.tooltip || ''
         }));
         renderUngroupedLinks();
     }

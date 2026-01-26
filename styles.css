@@ -517,6 +517,11 @@ select:focus-visible {
     min-width: 140px;
 }
 
+.link-row .link-tooltip-input {
+    max-width: 200px;
+    min-width: 120px;
+}
+
 .link-row select.link-type-select {
     width: 65px;
     flex: 0 0 auto;
