@@ -1008,11 +1008,17 @@ function addPresetAsLink(presetId) {
     const preset = getAllPresets().find(p => p.id === presetId);
     if (!preset) return;
 
+    // Convert SVG icon to data URI for use in img src
+    let iconValue = preset.icon || '';
+    if (iconValue.trim().startsWith('<svg')) {
+        iconValue = svgToDataUri(iconValue);
+    }
+
     const newLink = {
         id: linkIdCounter++,
         name: preset.name,
         url: preset.url,
-        icon: preset.icon
+        icon: iconValue
     };
 
     if (presetPickerGroupId !== null) {
