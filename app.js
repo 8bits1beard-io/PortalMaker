@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.15';
+const APP_VERSION = '1.0.16';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -3215,6 +3215,18 @@ function Set-BrowserProtocolPolicy {
     } catch {
         Write-Log "WARNING: Could not configure Chrome policy (may require admin): $_"
     }
+
+    # Configure Brave browser policy
+    $bravePolicyPath = "HKLM:\\SOFTWARE\\Policies\\BraveSoftware\\Brave"
+    try {
+        if (-not (Test-Path $bravePolicyPath)) {
+            New-Item -Path $bravePolicyPath -Force -ErrorAction Stop | Out-Null
+        }
+        Set-ItemProperty -Path $bravePolicyPath -Name 'AutoLaunchProtocolsFromOrigins' -Value $policyValue -Force
+        Write-Log "Configured Brave policy for protocols: $($Protocols -join ', ')"
+    } catch {
+        Write-Log "WARNING: Could not configure Brave policy (may require admin): $_"
+    }
 }
 
 function Remove-BrowserProtocolPolicy {
@@ -3230,6 +3242,13 @@ function Remove-BrowserProtocolPolicy {
     if (Test-Path $chromePolicyPath) {
         Remove-ItemProperty -Path $chromePolicyPath -Name 'AutoLaunchProtocolsFromOrigins' -ErrorAction SilentlyContinue
         Write-Log "Removed Chrome protocol policy"
+    }
+
+    # Remove Brave policy
+    $bravePolicyPath = "HKLM:\\SOFTWARE\\Policies\\BraveSoftware\\Brave"
+    if (Test-Path $bravePolicyPath) {
+        Remove-ItemProperty -Path $bravePolicyPath -Name 'AutoLaunchProtocolsFromOrigins' -ErrorAction SilentlyContinue
+        Write-Log "Removed Brave protocol policy"
     }
 }
 
