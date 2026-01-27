@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.22';
+const APP_VERSION = '1.0.23';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -28,6 +28,7 @@ const DEFAULTS = {
     buttonStyle: 'rounded',
     buttonSize: 'medium',
     gridColumns: '4',
+    openLinksNewTab: false,
     // Announcement banner
     bannerEnabled: false,
     bannerTitle: '',
@@ -1377,6 +1378,7 @@ function saveState() {
             buttonStyle: document.getElementById('buttonStyle').value,
             buttonSize: document.getElementById('buttonSize').value,
             gridColumns: document.getElementById('gridColumns').value,
+            openLinksNewTab: document.getElementById('openLinksNewTab').checked,
             // Announcement banner
             bannerEnabled: document.getElementById('bannerEnabled').checked,
             bannerTitle: document.getElementById('bannerTitle').value,
@@ -1507,6 +1509,7 @@ function loadState() {
                 document.getElementById('linkLayout').value = state.settings.linkLayout || DEFAULTS.linkLayout;
                 document.getElementById('buttonStyle').value = state.settings.buttonStyle || DEFAULTS.buttonStyle;
                 document.getElementById('buttonSize').value = state.settings.buttonSize || DEFAULTS.buttonSize;
+                document.getElementById('openLinksNewTab').checked = state.settings.openLinksNewTab || false;
                 document.getElementById('gridColumns').value = state.settings.gridColumns || DEFAULTS.gridColumns;
 
                 // Restore announcement banner settings
@@ -2171,6 +2174,8 @@ function generateHTML(useComputerNameVariable = false) {
     const buttonStyle = document.getElementById('buttonStyle').value || DEFAULTS.buttonStyle;
     const buttonSize = document.getElementById('buttonSize').value || DEFAULTS.buttonSize;
     const gridColumns = document.getElementById('gridColumns').value || DEFAULTS.gridColumns;
+    const openLinksNewTab = document.getElementById('openLinksNewTab').checked;
+    const targetAttr = openLinksNewTab ? ' target="_blank" rel="noopener"' : '';
 
     // Announcement banner settings
     const bannerEnabled = document.getElementById('bannerEnabled').checked;
@@ -2209,7 +2214,7 @@ function generateHTML(useComputerNameVariable = false) {
                         const href = escapeHtml(link.url);
                         const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                         const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
-                        return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}"${titleAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
+                        return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}"${titleAttr}${targetAttr}>${iconHtml}${escapeHtml(link.name)}</a></li>`;
                     }).join('')}
                 </ul>
             </section>`;
@@ -2225,7 +2230,7 @@ function generateHTML(useComputerNameVariable = false) {
                     const href = escapeHtml(link.url);
                     const iconHtml = link.icon ? `<img class="link-icon" src="${escapeHtml(link.icon)}" alt="">` : '';
                     const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
-                    return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}"${titleAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
+                    return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}"${titleAttr}${targetAttr}>${iconHtml}${escapeHtml(link.name)}</a>`;
                 }).join('')}
             </div>`;
     }
@@ -3730,6 +3735,7 @@ function applyImportedConfig(config) {
         document.getElementById('buttonStyle').value = config.settings.buttonStyle || DEFAULTS.buttonStyle;
         document.getElementById('buttonSize').value = config.settings.buttonSize || DEFAULTS.buttonSize;
         document.getElementById('gridColumns').value = config.settings.gridColumns || DEFAULTS.gridColumns;
+        document.getElementById('openLinksNewTab').checked = config.settings.openLinksNewTab || false;
 
         // Announcement banner
         document.getElementById('bannerEnabled').checked = config.settings.bannerEnabled || false;
@@ -3861,6 +3867,7 @@ function resetAll() {
     document.getElementById('buttonStyle').value = DEFAULTS.buttonStyle;
     document.getElementById('buttonSize').value = DEFAULTS.buttonSize;
     document.getElementById('gridColumns').value = DEFAULTS.gridColumns;
+    document.getElementById('openLinksNewTab').checked = DEFAULTS.openLinksNewTab;
 
     // Reset announcement banner settings
     document.getElementById('bannerEnabled').checked = false;
