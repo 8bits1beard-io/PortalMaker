@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.34';
+const APP_VERSION = '1.0.35';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -1378,7 +1378,6 @@ function saveState() {
             scriptName: document.getElementById('scriptName').value,
             destinationPath: document.getElementById('destinationPath').value,
             // Link layout
-            linkLayout: document.getElementById('linkLayout').value,
             buttonStyle: document.getElementById('buttonStyle').value,
             buttonSize: document.getElementById('buttonSize').value,
             gridColumns: document.getElementById('gridColumns').value,
@@ -1513,7 +1512,6 @@ function loadState() {
                 document.getElementById('destinationPath').value = state.settings.destinationPath || 'C:\\ProgramData\\PortalMaker\\index.html';
 
                 // Restore link layout settings
-                document.getElementById('linkLayout').value = state.settings.linkLayout || DEFAULTS.linkLayout;
                 document.getElementById('buttonStyle').value = state.settings.buttonStyle || DEFAULTS.buttonStyle;
                 document.getElementById('buttonSize').value = state.settings.buttonSize || DEFAULTS.buttonSize;
                 document.getElementById('openLinksNewTab').checked = state.settings.openLinksNewTab || false;
@@ -1986,10 +1984,13 @@ function updateUngroupedLink(linkId, field, value) {
 function renderGroups() {
     const container = document.getElementById('groupsContainer');
 
+    const groupSettingsEl = document.getElementById('groupSettings');
     if (groups.length === 0) {
         container.innerHTML = '<p class="empty-message">No groups added yet. Click "Add Group" to create one.</p>';
+        if (groupSettingsEl) groupSettingsEl.style.display = 'none';
         return;
     }
+    if (groupSettingsEl) groupSettingsEl.style.display = 'block';
 
     container.innerHTML = groups.map((group, groupIndex) => `
         <fieldset class="group-card" data-group-id="${group.id}" aria-label="Link group ${groupIndex + 1}"
@@ -2179,8 +2180,9 @@ function generateHTML(useComputerNameVariable = false) {
     const autoRefreshUrl = document.getElementById('autoRefreshUrl').value.trim();
     const footerText = document.getElementById('footerText').value || '';
 
-    // Link layout settings
-    const linkLayout = document.getElementById('linkLayout').value || DEFAULTS.linkLayout;
+    // Link layout settings - auto-determine based on content
+    const hasGroups = groups.some(g => g.name && g.links.some(l => l.name && l.url));
+    const linkLayout = hasGroups ? 'cards' : 'grid';
     const buttonStyle = document.getElementById('buttonStyle').value || DEFAULTS.buttonStyle;
     const buttonSize = document.getElementById('buttonSize').value || DEFAULTS.buttonSize;
     const gridColumns = document.getElementById('gridColumns').value || DEFAULTS.gridColumns;
@@ -2388,7 +2390,7 @@ function generateHTML(useComputerNameVariable = false) {
 
         html, body {
             height: 100%;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Segoe UI Variable', 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -2403,6 +2405,26 @@ function generateHTML(useComputerNameVariable = false) {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+        }
+
+        body:not(.effects-none)::before {
+            content: '';
+            position: fixed;
+            inset: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 600px 600px at 30% 20%, color-mix(in srgb, var(--link-bg) 18%, transparent), transparent),
+                radial-gradient(ellipse 500px 500px at 70% 80%, color-mix(in srgb, var(--heading-color) 12%, transparent), transparent);
+            animation: auroraShift 25s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes auroraShift {
+            0%   { transform: translate(0, 0) rotate(0deg); }
+            50%  { transform: translate(-5%, 3%) rotate(3deg); }
+            100% { transform: translate(3%, -5%) rotate(-2deg); }
         }
 
         .skip-link {
@@ -2631,11 +2653,11 @@ function generateHTML(useComputerNameVariable = false) {
         .greeting-text {
             font-size: ${greetingFontSize}rem;
             font-weight: 800;
-            letter-spacing: -0.03em;
+            letter-spacing: -0.04em;
             line-height: 1.05;
             color: var(--white);
             margin: 0 0 ${greetingSpacing}rem 0;
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.15);
+            text-shadow: 0 0 40px color-mix(in srgb, var(--heading-color) 25%, transparent), 0 2px 20px rgba(0, 0, 0, 0.15);
         }
 
         #time-greeting {
@@ -2653,7 +2675,7 @@ function generateHTML(useComputerNameVariable = false) {
             padding: 0 1rem;
             display: grid;
             grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .link-group {
@@ -2672,7 +2694,11 @@ function generateHTML(useComputerNameVariable = false) {
             gap: 0.5rem;
             margin-bottom: 1rem;
             padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid transparent;
+            background-image: linear-gradient(to right, color-mix(in srgb, var(--heading-color) 40%, transparent), transparent);
+            background-size: 100% 1px;
+            background-position: bottom;
+            background-repeat: no-repeat;
         }
 
         .group-icon {
@@ -2696,7 +2722,7 @@ function generateHTML(useComputerNameVariable = false) {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.875rem;
             padding: 0;
             margin: 0;
             flex: 1;
@@ -2757,6 +2783,14 @@ function generateHTML(useComputerNameVariable = false) {
             width: 40px;
             height: 40px;
             flex-shrink: 0;
+            border-radius: 12px;
+            background: color-mix(in srgb, var(--link-text) 8%, transparent);
+            transition: background 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .link-button:hover .tile-icon {
+            background: color-mix(in srgb, var(--link-hover-text) 12%, transparent);
+            box-shadow: 0 0 16px color-mix(in srgb, var(--link-hover-bg) 30%, transparent);
         }
 
         .tile-icon .link-icon {
@@ -2776,7 +2810,9 @@ function generateHTML(useComputerNameVariable = false) {
             color: var(--link-hover-text);
             outline: none;
             transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.2);
+            box-shadow:
+                0 8px 25px -5px rgba(0, 0, 0, 0.2),
+                0 0 20px -5px color-mix(in srgb, var(--link-hover-bg) 35%, transparent);
         }
 
         .link-button:active {
@@ -2803,12 +2839,17 @@ function generateHTML(useComputerNameVariable = false) {
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .link-button {
+            .link-button, .link-group, .greeting-text {
                 transition: none;
-                animation: none;
+                animation: none !important;
             }
-            .effects-enhanced .link-button {
-                animation: none;
+            body::before {
+                animation: none !important;
+            }
+            .effects-enhanced .link-button,
+            .effects-enhanced .link-group,
+            .effects-enhanced .greeting-text {
+                animation: none !important;
             }
         }
 
@@ -2905,7 +2946,7 @@ function generateHTML(useComputerNameVariable = false) {
             display: grid;
             grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
             grid-auto-rows: 1fr;
-            gap: 0.75rem;
+            gap: 0.875rem;
         }
 
         .links-container.layout-grid .links-list li {
@@ -2916,7 +2957,7 @@ function generateHTML(useComputerNameVariable = false) {
             display: grid;
             grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
             grid-auto-rows: 1fr;
-            gap: 0.75rem;
+            gap: 0.875rem;
             margin-top: 0;
         }
 
@@ -3186,9 +3227,10 @@ function generateHTML(useComputerNameVariable = false) {
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--heading-color) 40%, transparent), transparent);
             border-radius: 16px 16px 0 0;
             pointer-events: none;
+            transition: background 0.3s ease;
         }
 
         body.card-style-elevated .links-container .link-group:hover {
@@ -3197,7 +3239,12 @@ function generateHTML(useComputerNameVariable = false) {
             box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.1);
         }
 
+        body.card-style-elevated .links-container .link-group:hover::after {
+            background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--heading-color) 60%, transparent), transparent);
+        }
+
         body.card-style-glass .links-container .link-group {
+            position: relative;
             background: rgba(255, 255, 255, 0.12);
             backdrop-filter: blur(24px) saturate(1.2);
             -webkit-backdrop-filter: blur(24px) saturate(1.2);
@@ -3206,6 +3253,24 @@ function generateHTML(useComputerNameVariable = false) {
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px -8px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        body.card-style-glass .links-container .link-group::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 0%, color-mix(in srgb, var(--heading-color) 8%, transparent), transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body.card-style-glass .links-container .link-group > * {
+            position: relative;
+            z-index: 1;
         }
 
         body.card-style-glass .links-container .link-group:hover {
@@ -3238,20 +3303,39 @@ function generateHTML(useComputerNameVariable = false) {
         }
 
         /* Visual effects - enhanced (fade-in animation + more dramatic hover) */
-        body.effects-enhanced .link-button {
-            animation: fadeInUp 0.5s ease-out backwards;
+        body.effects-enhanced .greeting-text {
+            animation: greetingReveal 0.8s ease-out backwards;
         }
 
-        body.effects-enhanced .link-group:nth-child(1) .link-button { animation-delay: 0.1s; }
-        body.effects-enhanced .link-group:nth-child(2) .link-button { animation-delay: 0.2s; }
-        body.effects-enhanced .link-group:nth-child(3) .link-button { animation-delay: 0.3s; }
-        body.effects-enhanced .link-group:nth-child(4) .link-button { animation-delay: 0.4s; }
-        body.effects-enhanced .standalone-links .link-button { animation-delay: 0.05s; }
+        body.effects-enhanced .link-button {
+            animation: fadeInScale 0.5s ease-out backwards;
+        }
+
+        body.effects-enhanced .link-group {
+            animation: fadeInScale 0.5s ease-out backwards;
+        }
+
+        body.effects-enhanced .link-group:nth-child(1) { animation-delay: 0.1s; }
+        body.effects-enhanced .link-group:nth-child(2) { animation-delay: 0.2s; }
+        body.effects-enhanced .link-group:nth-child(3) { animation-delay: 0.3s; }
+        body.effects-enhanced .link-group:nth-child(4) { animation-delay: 0.4s; }
+        body.effects-enhanced .link-group:nth-child(1) .link-button { animation-delay: 0.15s; }
+        body.effects-enhanced .link-group:nth-child(2) .link-button { animation-delay: 0.25s; }
+        body.effects-enhanced .link-group:nth-child(3) .link-button { animation-delay: 0.35s; }
+        body.effects-enhanced .link-group:nth-child(4) .link-button { animation-delay: 0.45s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(1) { animation-delay: 0.05s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(2) { animation-delay: 0.1s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(3) { animation-delay: 0.15s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(4) { animation-delay: 0.2s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(5) { animation-delay: 0.25s; }
+        body.effects-enhanced .standalone-links .link-button:nth-child(6) { animation-delay: 0.3s; }
 
         body.effects-enhanced .link-button:hover,
         body.effects-enhanced .link-button:focus {
             transform: translateY(-4px) scale(1.03);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.25),
+                0 0 30px -5px color-mix(in srgb, var(--link-hover-bg) 45%, transparent);
         }
 
         @keyframes fadeInUp {
@@ -3262,6 +3346,30 @@ function generateHTML(useComputerNameVariable = false) {
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes greetingReveal {
+            from {
+                opacity: 0;
+                filter: blur(12px);
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                filter: blur(0);
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
             }
         }
 
@@ -3493,10 +3601,9 @@ function updatePreview() {
     const bannerEnabled = document.getElementById('bannerEnabled').checked;
     document.getElementById('bannerOptionsGroup').style.display = bannerEnabled ? 'block' : 'none';
 
-    // Toggle grid columns visibility and label (show for cards, grid, and buttons layouts)
-    const linkLayout = document.getElementById('linkLayout').value;
-    document.getElementById('gridColumnsGroup').style.display = linkLayout !== 'list' ? 'block' : 'none';
-    document.getElementById('gridColumnsLabel').textContent = linkLayout === 'cards' ? 'Groups per row' : 'Columns per row';
+    // Toggle grid columns label based on auto-detected layout
+    const hasGroupsForLabel = groups.some(g => g.name && g.links.some(l => l.name && l.url));
+    document.getElementById('gridColumnsLabel').textContent = hasGroupsForLabel ? 'Groups per row' : 'Columns per row';
 
     // Save state to localStorage
     saveState();
@@ -4075,7 +4182,6 @@ function applyImportedConfig(config) {
         document.getElementById('autoRefreshUrl').value = config.settings.autoRefreshUrl || '';
 
         // Link layout options
-        document.getElementById('linkLayout').value = config.settings.linkLayout || DEFAULTS.linkLayout;
         document.getElementById('buttonStyle').value = config.settings.buttonStyle || DEFAULTS.buttonStyle;
         document.getElementById('buttonSize').value = config.settings.buttonSize || DEFAULTS.buttonSize;
         document.getElementById('gridColumns').value = config.settings.gridColumns || DEFAULTS.gridColumns;
@@ -4210,7 +4316,6 @@ function resetAll() {
     document.getElementById('destinationPath').value = DEFAULTS.destinationPath;
 
     // Reset link layout settings
-    document.getElementById('linkLayout').value = DEFAULTS.linkLayout;
     document.getElementById('buttonStyle').value = DEFAULTS.buttonStyle;
     document.getElementById('buttonSize').value = DEFAULTS.buttonSize;
     document.getElementById('gridColumns').value = DEFAULTS.gridColumns;

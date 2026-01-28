@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PortalMaker (v1.0.30) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
+PortalMaker (v1.0.35) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
 
 **Tech stack:** Vanilla JavaScript (ES6+), HTML5, CSS3 with custom properties. No build system, bundler, or package manager.
 
@@ -16,7 +16,7 @@ Open `index.html` directly in a browser. No build step required.
 
 ### Files
 - **index.html** - UI structure with 5-tab interface (Links, Style, Page, Extras, Export)
-- **app.js** - Core logic, state management, HTML/PowerShell generation (~3300 lines)
+- **app.js** - Core logic, state management, HTML/PowerShell generation (~3500 lines)
 - **styles.css** - Responsive styling with CSS variables, accessibility support
 
 ### State Management
@@ -32,7 +32,7 @@ let colorOverrides = {};   // Advanced color customizations
 ```
 
 ### Key Constants
-- `DEFAULTS` - Default configuration values (layout, colors, banner, button size, computer name format, open links in new tab)
+- `DEFAULTS` - Default configuration values (colors, banner, button size, computer name format, open links in new tab). Note: `linkLayout` is auto-determined (cards when groups exist, grid for standalone links only)
 - `BANNER_STYLES` - Announcement banner color schemes (info, warning, urgent)
 - `TEMPLATES` - Quick-start presets (customerFacing, employeeKiosk)
 - `ICON_LIBRARY` - Built-in SVG icons organized by category (ui, microsoft, browsers, tools)
