@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PortalMaker (v1.0.25) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
+PortalMaker (v1.0.26) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
 
 **Tech stack:** Vanilla JavaScript (ES6+), HTML5, CSS3 with custom properties. No build system, bundler, or package manager.
 
@@ -69,11 +69,10 @@ Uses `nslookup` for reverse DNS lookup to determine fully qualified domain name.
 Add to `themes` object with WCAG AA compliant colors:
 ```javascript
 themes.myTheme = {
-    primary: '#hex', accent: '#hex', background: '#hex',
-    surface: '#hex', text: '#hex', textSecondary: '#hex',
-    border: '#hex', linkBg: '#hex', linkText: '#hex', linkBorder: '#hex'
+    primary: '#hex', accent: '#hex'
 };
 ```
+Themes can optionally override derived colors: `linkBg`, `linkText`, `linkHoverBg`, `linkHoverText`, `bodyText`, `headingColor`. If omitted, these are derived from `primary` and `accent` automatically.
 
 ### New Icon to Library
 Add to appropriate category in `ICON_LIBRARY`:

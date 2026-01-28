@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.25';
+const APP_VERSION = '1.0.26';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -454,7 +454,7 @@ function validatePositions() {
 
 // Theme presets (all WCAG AA verified)
 const themes = {
-    walmart: { name: 'Walmart', primary: '#0053E2', accent: '#FFC220' },
+    walmart: { name: 'Walmart', primary: '#0053E2', accent: '#FFC220', linkBg: '#001E60', linkText: '#FFFFFF', linkHoverBg: '#FFC220', linkHoverText: '#001E60' },
     sunset: { name: 'Sunset', primary: '#9a3412', accent: '#fbbf24' },
     violet: { name: 'Violet', primary: '#5b21b6', accent: '#c4b5fd' },
     slate: { name: 'Slate', primary: '#1e293b', accent: '#f59e0b' },
@@ -503,12 +503,12 @@ function getActiveColors() {
     const base = getBaseColors();
     return {
         background: colorOverrides.background || base.primary,
-        bodyText: colorOverrides.bodyText || '#FFFFFF',
-        linkBg: colorOverrides.linkBg || base.accent,
-        linkText: colorOverrides.linkText || base.primary,
-        linkHoverBg: colorOverrides.linkHoverBg || '#FFFFFF',
-        linkHoverText: colorOverrides.linkHoverText || base.primary,
-        headingColor: colorOverrides.headingColor || base.accent,
+        bodyText: colorOverrides.bodyText || base.bodyText || '#FFFFFF',
+        linkBg: colorOverrides.linkBg || base.linkBg || base.accent,
+        linkText: colorOverrides.linkText || base.linkText || base.primary,
+        linkHoverBg: colorOverrides.linkHoverBg || base.linkHoverBg || '#FFFFFF',
+        linkHoverText: colorOverrides.linkHoverText || base.linkHoverText || base.primary,
+        headingColor: colorOverrides.headingColor || base.headingColor || base.accent,
         // Keep primary/accent for backwards compatibility
         primary: colorOverrides.background || base.primary,
         accent: colorOverrides.linkBg || base.accent
@@ -518,6 +518,8 @@ function getActiveColors() {
 // Get default value for a color property based on current theme
 function getColorDefault(prop) {
     const base = getBaseColors();
+    // Check if the theme defines this color directly
+    if (base[prop.key]) return base[prop.key];
     if (prop.default) return prop.default;
     if (prop.defaultFrom === 'primary') return base.primary;
     if (prop.defaultFrom === 'accent') return base.accent;
