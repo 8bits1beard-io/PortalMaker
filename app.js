@@ -3257,7 +3257,9 @@ function generateHTML(useComputerNameVariable = false) {
         .link-button.style-ios.size-large .tile-icon .link-icon { width: 40px; height: 40px; }
         .link-button.style-ios.size-large .tile-label { font-size: 0.75rem; }
 
-        .standalone-links:has(.style-ios) {
+        .standalone-links:has(.style-ios),
+        .links-container.layout-grid .standalone-links:has(.style-ios),
+        .links-container.layout-buttons .standalone-links:has(.style-ios) {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             gap: ${iosSpacing}rem;
@@ -3270,7 +3272,9 @@ function generateHTML(useComputerNameVariable = false) {
             max-width: 90px;
         }
 
-        .links-list:has(.style-ios) {
+        .links-list:has(.style-ios),
+        .links-container.layout-grid .links-list:has(.style-ios),
+        .links-container.layout-buttons .links-list:has(.style-ios) {
             gap: ${iosSpacing}rem;
         }
 
