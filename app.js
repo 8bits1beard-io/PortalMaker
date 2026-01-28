@@ -2253,7 +2253,7 @@ function generateHTML(useComputerNameVariable = false) {
     const validUngrouped = ungroupedLinks.filter(l => l.name && l.url);
     if (validUngrouped.length > 0) {
         linksHTML += `
-            <div class="standalone-links">
+            <div class="standalone-links${buttonStyle === 'ios' ? ' ios-layout' : ''}">
                 ${validUngrouped.map(link => {
                     const href = escapeHtml(link.url);
                     const isSvgIcon = link.icon && link.icon.startsWith('data:image/svg+xml');
@@ -2278,7 +2278,7 @@ function generateHTML(useComputerNameVariable = false) {
                 <div class="group-heading-row">
                     ${groupIconHtml}<h2 id="${groupId}-heading" class="group-heading">${escapeHtml(group.name)}</h2>
                 </div>
-                <ul class="links-list">
+                <ul class="links-list${buttonStyle === 'ios' ? ' ios-layout' : ''}">
                     ${validLinks.map(link => {
                         const href = escapeHtml(link.url);
                         const isSvgIcon = link.icon && link.icon.startsWith('data:image/svg+xml');
@@ -3257,10 +3257,7 @@ function generateHTML(useComputerNameVariable = false) {
         .link-button.style-ios.size-large .tile-icon .link-icon { width: 40px; height: 40px; }
         .link-button.style-ios.size-large .tile-label { font-size: 0.75rem; }
 
-        .standalone-links:has(.style-ios),
-        .links-container.layout-cards .standalone-links:has(.style-ios),
-        .links-container.layout-grid .standalone-links:has(.style-ios),
-        .links-container.layout-buttons .standalone-links:has(.style-ios) {
+        .standalone-links.ios-layout {
             display: grid;
             grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
             gap: ${iosSpacing}rem;
@@ -3272,11 +3269,16 @@ function generateHTML(useComputerNameVariable = false) {
             width: 100%;
         }
 
-        .links-list:has(.style-ios),
-        .links-container.layout-cards .links-list:has(.style-ios),
-        .links-container.layout-grid .links-list:has(.style-ios),
-        .links-container.layout-buttons .links-list:has(.style-ios) {
+        .links-list.ios-layout {
+            display: grid;
+            grid-template-columns: repeat(${gridColumns}, minmax(0, 1fr));
             gap: ${iosSpacing}rem;
+            justify-items: center;
+        }
+
+        .links-list.ios-layout li {
+            display: flex;
+            justify-content: center;
         }
 
         /* Button size variations */
