@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-PortalMaker (v1.0.36) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
+PortalMaker (v1.0.37) is a WYSIWYG visual editor for creating branded kiosk portal pages. It generates standalone HTML files or PowerShell deployment scripts for Windows enterprise environments (Intune/SCCM).
 
 **Tech stack:** Vanilla JavaScript (ES6+), HTML5, CSS3 with custom properties. No build system, bundler, or package manager.
 
@@ -32,7 +32,7 @@ let colorOverrides = {};   // Advanced color customizations
 ```
 
 ### Key Constants
-- `DEFAULTS` - Default configuration values (colors, banner, button size, computer name format, open links in new tab). Note: `linkLayout` is auto-determined (cards when groups exist, grid for standalone links only)
+- `DEFAULTS` - Default configuration values (colors, banner, button size, computer name format, greeting mode, iOS spacing, open links in new tab). Note: `linkLayout` is auto-determined (cards when groups exist, grid for standalone links only)
 - `BANNER_STYLES` - Announcement banner color schemes (info, warning, urgent)
 - `TEMPLATES` - Quick-start presets (customerFacing, employeeKiosk)
 - `ICON_LIBRARY` - Built-in SVG icons organized by category (ui, microsoft, browsers, tools)
@@ -56,6 +56,18 @@ Multi-level system supporting:
 - Cross-container moves (group ↔ standalone)
 
 State tracked via: `draggedGroupId`, `draggedLinkId`, `draggedLinkGroupId`, `draggedUngroupedId`
+
+### Greeting Mode
+A `<select id="greetingMode">` dropdown controls greeting behavior with four modes:
+- `none` — No greeting displayed (default)
+- `time` — Time-based only ("Good morning/afternoon/evening"), no text input
+- `custom` — User-typed greeting text, text input visible
+- `custom-time` — Time-based prefix prepended to custom text, text input visible
+
+`toggleGreetingInput()` shows/hides the text input based on the selected mode. Old configs with `timeGreeting` boolean are migrated automatically in `loadState()` and `applyImportedConfig()`.
+
+### iOS Spacing
+When button style is `ios`, a "Shortcut Spacing" slider (`iosSpacing`, 0–2rem, default 0.75rem) controls padding between shortcuts. `toggleIosSpacing()` shows/hides the slider based on button style. The value applies to button padding, standalone grid gap, and links-list gap in the generated CSS.
 
 ### FQDN Identifier Feature
 Uses `nslookup` for reverse DNS lookup to determine fully qualified domain name. Supports:

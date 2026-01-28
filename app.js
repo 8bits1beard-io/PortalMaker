@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.36';
+const APP_VERSION = '1.0.37';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -26,6 +26,7 @@ const DEFAULTS = {
     linkLayout: 'grid',
     buttonStyle: 'rounded',
     buttonSize: 'medium',
+    iosSpacing: '0.75',
     gridColumns: '4',
     cardStyle: 'subtle',
     visualEffects: 'subtle',
@@ -35,8 +36,8 @@ const DEFAULTS = {
     bannerTitle: '',
     bannerMessage: '',
     bannerStyle: 'info',
-    // Time-based greeting
-    timeGreeting: false
+    // Greeting mode
+    greetingMode: 'none'
 };
 
 // Banner style colors
@@ -54,6 +55,7 @@ const TEMPLATES = {
             settings: {
                 pageTitle: 'Customer Kiosk',
                 greeting: 'Welcome',
+                greetingMode: 'custom',
                 showComputerName: false,
                 computerNamePosition: 'top-right',
                 showDateTime: true,
@@ -110,6 +112,7 @@ const TEMPLATES = {
             settings: {
                 pageTitle: 'Employee Kiosk',
                 greeting: 'Hello Team',
+                greetingMode: 'custom',
                 showComputerName: true,
                 computerNamePosition: 'top-right',
                 showDateTime: true,
@@ -1245,6 +1248,19 @@ function toggleSection(sectionId) {
     }
 }
 
+// Show/hide greeting text input based on greeting mode
+function toggleGreetingInput() {
+    const mode = document.getElementById('greetingMode').value;
+    document.getElementById('greetingTextGroup').style.display =
+        (mode === 'custom' || mode === 'custom-time') ? '' : 'none';
+}
+
+// Show/hide iOS spacing slider based on button style
+function toggleIosSpacing() {
+    const style = document.getElementById('buttonStyle').value;
+    document.getElementById('iosSpacingGroup').style.display = style === 'ios' ? '' : 'none';
+}
+
 // URL validation
 function isValidUrl(string) {
     if (!string || string.trim() === '') return true; // Empty is ok (optional)
@@ -1380,6 +1396,7 @@ function saveState() {
             // Link layout
             buttonStyle: document.getElementById('buttonStyle').value,
             buttonSize: document.getElementById('buttonSize').value,
+            iosSpacing: document.getElementById('iosSpacing').value,
             gridColumns: document.getElementById('gridColumns').value,
             cardStyle: document.getElementById('cardStyle').value,
             visualEffects: document.getElementById('visualEffects').value,
@@ -1389,8 +1406,8 @@ function saveState() {
             bannerTitle: document.getElementById('bannerTitle').value,
             bannerMessage: document.getElementById('bannerMessage').value,
             bannerStyle: document.getElementById('bannerStyle').value,
-            // Time-based greeting
-            timeGreeting: document.getElementById('timeGreeting').checked
+            // Greeting mode
+            greetingMode: document.getElementById('greetingMode').value
         }
     };
     try {
@@ -1514,6 +1531,10 @@ function loadState() {
                 // Restore link layout settings
                 document.getElementById('buttonStyle').value = state.settings.buttonStyle || DEFAULTS.buttonStyle;
                 document.getElementById('buttonSize').value = state.settings.buttonSize || DEFAULTS.buttonSize;
+                const iosSpacing = state.settings.iosSpacing || DEFAULTS.iosSpacing;
+                document.getElementById('iosSpacing').value = iosSpacing;
+                document.getElementById('iosSpacingValue').textContent = iosSpacing + 'rem';
+                toggleIosSpacing();
                 document.getElementById('openLinksNewTab').checked = state.settings.openLinksNewTab || false;
                 document.getElementById('gridColumns').value = state.settings.gridColumns || DEFAULTS.gridColumns;
                 document.getElementById('cardStyle').value = state.settings.cardStyle || DEFAULTS.cardStyle;
@@ -1524,7 +1545,17 @@ function loadState() {
                 document.getElementById('bannerTitle').value = state.settings.bannerTitle || '';
                 document.getElementById('bannerMessage').value = state.settings.bannerMessage || '';
                 document.getElementById('bannerStyle').value = state.settings.bannerStyle || DEFAULTS.bannerStyle;
-                document.getElementById('timeGreeting').checked = state.settings.timeGreeting || false;
+                // Migrate old timeGreeting to greetingMode
+                if (state.settings.greetingMode) {
+                    document.getElementById('greetingMode').value = state.settings.greetingMode;
+                } else if (state.settings.timeGreeting) {
+                    document.getElementById('greetingMode').value = state.settings.greeting ? 'custom-time' : 'time';
+                } else if (state.settings.greeting) {
+                    document.getElementById('greetingMode').value = 'custom';
+                } else {
+                    document.getElementById('greetingMode').value = DEFAULTS.greetingMode;
+                }
+                toggleGreetingInput();
 
                 // Restore custom color inputs if custom theme
                 if (selectedTheme === 'custom') {
@@ -2185,11 +2216,14 @@ function generateHTML(useComputerNameVariable = false) {
     const linkLayout = hasGroups ? 'cards' : 'grid';
     const buttonStyle = document.getElementById('buttonStyle').value || DEFAULTS.buttonStyle;
     const buttonSize = document.getElementById('buttonSize').value || DEFAULTS.buttonSize;
+    const iosSpacing = document.getElementById('iosSpacing').value || DEFAULTS.iosSpacing;
     const gridColumns = document.getElementById('gridColumns').value || DEFAULTS.gridColumns;
     const cardStyle = document.getElementById('cardStyle').value || DEFAULTS.cardStyle;
     const visualEffects = document.getElementById('visualEffects').value || DEFAULTS.visualEffects;
     const openLinksNewTab = document.getElementById('openLinksNewTab').checked;
-    const timeGreeting = document.getElementById('timeGreeting').checked;
+    const greetingMode = document.getElementById('greetingMode').value;
+    const useTimeGreeting = greetingMode === 'time' || greetingMode === 'custom-time';
+    const hasGreeting = greetingMode !== 'none';
     const targetAttr = openLinksNewTab ? ' target="_blank" rel="noopener"' : '';
 
     // Announcement banner settings
@@ -2270,14 +2304,19 @@ function generateHTML(useComputerNameVariable = false) {
         </div>`;
     }
 
-    const greetingContent = timeGreeting
-        ? `<span id="time-greeting"></span> ${escapeHtml(greeting)}`
-        : escapeHtml(greeting);
+    let greetingContent = '';
+    if (greetingMode === 'time') {
+        greetingContent = '<span id="time-greeting"></span>';
+    } else if (greetingMode === 'custom-time') {
+        greetingContent = `<span id="time-greeting"></span> ${escapeHtml(greeting)}`;
+    } else if (greetingMode === 'custom') {
+        greetingContent = escapeHtml(greeting);
+    }
 
     if (sideLogoUrl && !isSideLogoCorner) {
         // Side logo next to greeting
         const logoFirst = sideLogoPosition === 'left';
-        if (greeting) {
+        if (hasGreeting) {
             welcomeHeader += `
         <div class="greeting-row${sideLogoPosition === 'right' ? ' logo-right' : ''}">
             ${logoFirst ? sideLogoHTML : ''}<h1 class="greeting-text">${greetingContent}</h1>${!logoFirst ? sideLogoHTML : ''}
@@ -2290,7 +2329,7 @@ function generateHTML(useComputerNameVariable = false) {
         }
     } else {
         welcomeHeader += `
-        ${greeting ? `<h1 class="greeting-text">${greetingContent}</h1>` : ''}`;
+        ${hasGreeting ? `<h1 class="greeting-text">${greetingContent}</h1>` : ''}`;
     }
 
     // Corner logo overlay HTML (rendered separately in body)
@@ -2329,7 +2368,7 @@ function generateHTML(useComputerNameVariable = false) {
             enableAutoRefresh,
             autoRefreshDelay,
             autoRefreshUrl,
-            timeGreeting
+            greetingMode
         },
         theme: {
             selectedTheme,
@@ -3149,7 +3188,7 @@ function generateHTML(useComputerNameVariable = false) {
             background: transparent;
             border: none;
             box-shadow: none;
-            padding: 0.75rem 0.5rem;
+            padding: ${iosSpacing}rem 0.5rem;
             gap: 0.5rem;
             border-radius: 12px;
         }
@@ -3211,7 +3250,7 @@ function generateHTML(useComputerNameVariable = false) {
         .standalone-links:has(.style-ios) {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 0.75rem;
+            gap: ${iosSpacing}rem;
             justify-items: center;
         }
 
@@ -3219,6 +3258,10 @@ function generateHTML(useComputerNameVariable = false) {
             min-width: unset;
             width: 100%;
             max-width: 90px;
+        }
+
+        .links-list:has(.style-ios) {
+            gap: ${iosSpacing}rem;
         }
 
         /* Button size variations */
@@ -3556,7 +3599,7 @@ ${(showFooter && footerText) || (showDateTime && dateTimePosition === 'footer') 
         ${networkInFooter ? `<p>${escapeHtml(networkDisplayValue)}</p>` : ''}
     </footer>
 ` : ''}
-${timeGreeting && greeting ? `
+${useTimeGreeting ? `
     <script>
         function updateTimeGreeting() {
             var h = new Date().getHours();
@@ -4262,6 +4305,10 @@ function applyImportedConfig(config) {
         // Link layout options
         document.getElementById('buttonStyle').value = config.settings.buttonStyle || DEFAULTS.buttonStyle;
         document.getElementById('buttonSize').value = config.settings.buttonSize || DEFAULTS.buttonSize;
+        const iosSpacing = config.settings.iosSpacing || DEFAULTS.iosSpacing;
+        document.getElementById('iosSpacing').value = iosSpacing;
+        document.getElementById('iosSpacingValue').textContent = iosSpacing + 'rem';
+        toggleIosSpacing();
         document.getElementById('gridColumns').value = config.settings.gridColumns || DEFAULTS.gridColumns;
         document.getElementById('cardStyle').value = config.settings.cardStyle || DEFAULTS.cardStyle;
         document.getElementById('visualEffects').value = config.settings.visualEffects || DEFAULTS.visualEffects;
@@ -4273,7 +4320,17 @@ function applyImportedConfig(config) {
         document.getElementById('bannerMessage').value = config.settings.bannerMessage || '';
         document.getElementById('bannerStyle').value = config.settings.bannerStyle || DEFAULTS.bannerStyle;
 
-        document.getElementById('timeGreeting').checked = config.settings.timeGreeting || false;
+        // Migrate old timeGreeting to greetingMode
+        if (config.settings.greetingMode) {
+            document.getElementById('greetingMode').value = config.settings.greetingMode;
+        } else if (config.settings.timeGreeting) {
+            document.getElementById('greetingMode').value = config.settings.greeting ? 'custom-time' : 'time';
+        } else if (config.settings.greeting) {
+            document.getElementById('greetingMode').value = 'custom';
+        } else {
+            document.getElementById('greetingMode').value = DEFAULTS.greetingMode;
+        }
+        toggleGreetingInput();
     }
 
     // Apply theme
@@ -4396,6 +4453,9 @@ function resetAll() {
     // Reset link layout settings
     document.getElementById('buttonStyle').value = DEFAULTS.buttonStyle;
     document.getElementById('buttonSize').value = DEFAULTS.buttonSize;
+    document.getElementById('iosSpacing').value = DEFAULTS.iosSpacing;
+    document.getElementById('iosSpacingValue').textContent = DEFAULTS.iosSpacing + 'rem';
+    toggleIosSpacing();
     document.getElementById('gridColumns').value = DEFAULTS.gridColumns;
     document.getElementById('cardStyle').value = DEFAULTS.cardStyle;
     document.getElementById('visualEffects').value = DEFAULTS.visualEffects;
@@ -4407,7 +4467,8 @@ function resetAll() {
     document.getElementById('bannerMessage').value = '';
     document.getElementById('bannerStyle').value = DEFAULTS.bannerStyle;
 
-    document.getElementById('timeGreeting').checked = false;
+    document.getElementById('greetingMode').value = DEFAULTS.greetingMode;
+    toggleGreetingInput();
 
     // Reset custom color inputs
     document.getElementById('customPrimary').value = DEFAULTS.customColors.primary;
