@@ -2256,7 +2256,8 @@ function generateHTML(useComputerNameVariable = false) {
             <div class="standalone-links">
                 ${validUngrouped.map(link => {
                     const href = escapeHtml(link.url);
-                    const iconHtml = link.icon ? `<span class="tile-icon"><img class="link-icon" src="${escapeHtml(link.icon)}" alt=""></span>` : '';
+                    const isSvgIcon = link.icon && link.icon.startsWith('data:image/svg+xml');
+                    const iconHtml = link.icon ? `<span class="tile-icon"><img class="link-icon${isSvgIcon ? ' svg-icon' : ''}" src="${escapeHtml(link.icon)}" alt=""></span>` : '';
                     const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
                     return `<a href="${href}" class="link-button standalone style-${buttonStyle} size-${buttonSize}"${titleAttr}${targetAttr}>${iconHtml}<span class="tile-label">${escapeHtml(link.name)}</span></a>`;
                 }).join('')}
@@ -2280,7 +2281,8 @@ function generateHTML(useComputerNameVariable = false) {
                 <ul class="links-list">
                     ${validLinks.map(link => {
                         const href = escapeHtml(link.url);
-                        const iconHtml = link.icon ? `<span class="tile-icon"><img class="link-icon" src="${escapeHtml(link.icon)}" alt=""></span>` : '';
+                        const isSvgIcon = link.icon && link.icon.startsWith('data:image/svg+xml');
+                        const iconHtml = link.icon ? `<span class="tile-icon"><img class="link-icon${isSvgIcon ? ' svg-icon' : ''}" src="${escapeHtml(link.icon)}" alt=""></span>` : '';
                         const titleAttr = link.tooltip ? ` title="${escapeHtml(link.tooltip)}"` : '';
                         return `<li><a href="${href}" class="link-button style-${buttonStyle} size-${buttonSize}"${titleAttr}${targetAttr}>${iconHtml}<span class="tile-label">${escapeHtml(link.name)}</span></a></li>`;
                     }).join('')}
@@ -3210,6 +3212,9 @@ function generateHTML(useComputerNameVariable = false) {
         .link-button.style-ios .tile-icon .link-icon {
             width: 32px;
             height: 32px;
+        }
+
+        .link-button.style-ios .tile-icon .link-icon.svg-icon {
             filter: brightness(0)${isLinkTextLight ? ' invert(1)' : ''};
         }
 
