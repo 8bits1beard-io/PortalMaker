@@ -1,5 +1,5 @@
 // Default values
-const APP_VERSION = '1.0.39';
+const APP_VERSION = '1.0.40';
 const DEFAULTS = {
     theme: 'monochrome',
     customColors: { primary: '#0053E2', accent: '#FFC220' },
@@ -24,11 +24,10 @@ const DEFAULTS = {
     scriptName: 'MyPortal',
     // Link layout options
     linkLayout: 'grid',
-    buttonStyle: 'rounded',
+    visualStyle: 'rounded',     // Combined button + group style
     buttonSize: 'medium',
     iosSpacing: '0.75',
     gridColumns: '4',
-    cardStyle: 'subtle',
     visualEffects: 'subtle',
     openLinksNewTab: false,
     // Announcement banner
@@ -38,6 +37,58 @@ const DEFAULTS = {
     bannerStyle: 'info',
     // Greeting mode
     greetingMode: 'none'
+};
+
+// Visual style presets - defines both button and group appearance
+const VISUAL_STYLES = {
+    ios: {
+        name: 'iOS',
+        description: 'App-style icons with iOS-like grouped lists',
+        button: 'ios',
+        group: 'ios'
+    },
+    rounded: {
+        name: 'Rounded',
+        description: 'Soft rounded buttons with subtle cards',
+        button: 'rounded',
+        group: 'subtle'
+    },
+    glass: {
+        name: 'Glass',
+        description: 'Frosted glassmorphism effect',
+        button: 'glass',
+        group: 'glass'
+    },
+    elevated: {
+        name: 'Elevated',
+        description: 'Prominent shadows and depth',
+        button: 'elevated',
+        group: 'elevated'
+    },
+    minimal: {
+        name: 'Minimal',
+        description: 'Clean text links, no card backgrounds',
+        button: 'textonly',
+        group: 'none'
+    },
+    gradient: {
+        name: 'Gradient',
+        description: 'Subtle gradients with depth',
+        button: 'gradient',
+        group: 'elevated'
+    },
+    outline: {
+        name: 'Outline',
+        description: 'Elegant bordered buttons and cards',
+        button: 'outline',
+        group: 'bordered'
+    },
+    square: {
+        name: 'Square',
+        description: 'Sharp corners, modern look',
+        button: 'square',
+        group: 'bordered'
+    }
 };
 
 // Banner style colors
@@ -1255,10 +1306,10 @@ function toggleGreetingInput() {
         (mode === 'custom' || mode === 'custom-time') ? '' : 'none';
 }
 
-// Show/hide iOS spacing slider based on button style
+// Show/hide iOS spacing slider based on visual style
 function toggleIosSpacing() {
-    const style = document.getElementById('buttonStyle').value;
-    document.getElementById('iosSpacingGroup').style.display = style === 'ios' ? '' : 'none';
+    const visualStyle = document.getElementById('visualStyle').value;
+    document.getElementById('iosSpacingGroup').style.display = visualStyle === 'ios' ? '' : 'none';
 }
 
 // URL validation
@@ -1394,11 +1445,10 @@ function saveState() {
             scriptName: document.getElementById('scriptName').value,
             destinationPath: document.getElementById('destinationPath').value,
             // Link layout
-            buttonStyle: document.getElementById('buttonStyle').value,
+            visualStyle: document.getElementById('visualStyle').value,
             buttonSize: document.getElementById('buttonSize').value,
             iosSpacing: document.getElementById('iosSpacing').value,
             gridColumns: document.getElementById('gridColumns').value,
-            cardStyle: document.getElementById('cardStyle').value,
             visualEffects: document.getElementById('visualEffects').value,
             openLinksNewTab: document.getElementById('openLinksNewTab').checked,
             // Announcement banner
@@ -1529,7 +1579,21 @@ function loadState() {
                 document.getElementById('destinationPath').value = state.settings.destinationPath || 'C:\\ProgramData\\PortalMaker\\index.html';
 
                 // Restore link layout settings
-                document.getElementById('buttonStyle').value = state.settings.buttonStyle || DEFAULTS.buttonStyle;
+                // Migrate old buttonStyle/cardStyle to unified visualStyle
+                let visualStyle = state.settings.visualStyle;
+                if (!visualStyle && state.settings.buttonStyle) {
+                    // Map old buttonStyle to new visualStyle
+                    const oldButton = state.settings.buttonStyle;
+                    if (oldButton === 'ios') visualStyle = 'ios';
+                    else if (oldButton === 'glass') visualStyle = 'glass';
+                    else if (oldButton === 'elevated') visualStyle = 'elevated';
+                    else if (oldButton === 'textonly') visualStyle = 'minimal';
+                    else if (oldButton === 'gradient') visualStyle = 'gradient';
+                    else if (oldButton === 'outline') visualStyle = 'outline';
+                    else if (oldButton === 'square') visualStyle = 'square';
+                    else visualStyle = 'rounded';
+                }
+                document.getElementById('visualStyle').value = visualStyle || DEFAULTS.visualStyle;
                 document.getElementById('buttonSize').value = state.settings.buttonSize || DEFAULTS.buttonSize;
                 const iosSpacing = state.settings.iosSpacing || DEFAULTS.iosSpacing;
                 document.getElementById('iosSpacing').value = iosSpacing;
@@ -1537,7 +1601,6 @@ function loadState() {
                 toggleIosSpacing();
                 document.getElementById('openLinksNewTab').checked = state.settings.openLinksNewTab || false;
                 document.getElementById('gridColumns').value = state.settings.gridColumns || DEFAULTS.gridColumns;
-                document.getElementById('cardStyle').value = state.settings.cardStyle || DEFAULTS.cardStyle;
                 document.getElementById('visualEffects').value = state.settings.visualEffects || DEFAULTS.visualEffects;
 
                 // Restore announcement banner settings
@@ -2214,11 +2277,13 @@ function generateHTML(useComputerNameVariable = false) {
     // Link layout settings - auto-determine based on content
     const hasGroups = groups.some(g => g.name && g.links.some(l => l.name && l.url));
     const linkLayout = hasGroups ? 'cards' : 'grid';
-    const buttonStyle = document.getElementById('buttonStyle').value || DEFAULTS.buttonStyle;
+    const visualStyle = document.getElementById('visualStyle').value || DEFAULTS.visualStyle;
+    const styleConfig = VISUAL_STYLES[visualStyle] || VISUAL_STYLES.rounded;
+    const buttonStyle = styleConfig.button;
+    const cardStyle = styleConfig.group;
     const buttonSize = document.getElementById('buttonSize').value || DEFAULTS.buttonSize;
     const iosSpacing = document.getElementById('iosSpacing').value || DEFAULTS.iosSpacing;
     const gridColumns = document.getElementById('gridColumns').value || DEFAULTS.gridColumns;
-    const cardStyle = document.getElementById('cardStyle').value || DEFAULTS.cardStyle;
     const visualEffects = document.getElementById('visualEffects').value || DEFAULTS.visualEffects;
     const openLinksNewTab = document.getElementById('openLinksNewTab').checked;
     const greetingMode = document.getElementById('greetingMode').value;
@@ -3440,6 +3505,100 @@ function generateHTML(useComputerNameVariable = false) {
             box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.15);
         }
 
+        /* Card style: iOS - Settings-like grouped lists */
+        body.card-style-ios .links-container .link-group {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 0;
+            border-radius: 14px;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        body.card-style-ios .links-container .link-group .group-heading-row {
+            padding: 1rem 1.25rem 0.75rem;
+            margin-bottom: 0;
+            background: transparent;
+            border-bottom: none;
+            background-image: none;
+        }
+
+        body.card-style-ios .links-container .link-group .group-heading {
+            font-size: 0.8125rem;
+            text-transform: none;
+            letter-spacing: 0;
+            opacity: 0.7;
+        }
+
+        body.card-style-ios .links-container .link-group .links-list {
+            gap: 0;
+            padding: 0;
+        }
+
+        body.card-style-ios .links-container .link-group .links-list li {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        body.card-style-ios .links-container .link-group .links-list li:last-child {
+            border-bottom: none;
+        }
+
+        body.card-style-ios .links-container .link-group .link-button {
+            background: transparent;
+            border-radius: 0;
+            padding: 0.875rem 1.25rem;
+            justify-content: flex-start;
+            box-shadow: none;
+            gap: 0.75rem;
+        }
+
+        body.card-style-ios .links-container .link-group .link-button:hover,
+        body.card-style-ios .links-container .link-group .link-button:focus {
+            background: rgba(255, 255, 255, 0.08);
+            transform: none;
+            box-shadow: none;
+        }
+
+        body.card-style-ios .links-container .link-group .tile-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--link-bg);
+        }
+
+        body.card-style-ios .links-container .link-group .tile-icon .link-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        body.card-style-ios .links-container .link-group:hover {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        /* Card style: None - minimal, no visible container */
+        body.card-style-none .links-container .link-group {
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        body.card-style-none .links-container .link-group .group-heading-row {
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            background-image: none;
+        }
+
+        body.card-style-none .links-container .link-group:hover {
+            background: transparent;
+        }
+
         /* Visual effects - subtle (smooth hover with slight lift) */
         body.effects-subtle .link-button:hover,
         body.effects-subtle .link-button:focus {
@@ -4324,14 +4483,26 @@ function applyImportedConfig(config) {
         document.getElementById('autoRefreshUrl').value = config.settings.autoRefreshUrl || '';
 
         // Link layout options
-        document.getElementById('buttonStyle').value = config.settings.buttonStyle || DEFAULTS.buttonStyle;
+        // Migrate old buttonStyle/cardStyle to unified visualStyle
+        let visualStyle = config.settings.visualStyle;
+        if (!visualStyle && config.settings.buttonStyle) {
+            const oldButton = config.settings.buttonStyle;
+            if (oldButton === 'ios') visualStyle = 'ios';
+            else if (oldButton === 'glass') visualStyle = 'glass';
+            else if (oldButton === 'elevated') visualStyle = 'elevated';
+            else if (oldButton === 'textonly') visualStyle = 'minimal';
+            else if (oldButton === 'gradient') visualStyle = 'gradient';
+            else if (oldButton === 'outline') visualStyle = 'outline';
+            else if (oldButton === 'square') visualStyle = 'square';
+            else visualStyle = 'rounded';
+        }
+        document.getElementById('visualStyle').value = visualStyle || DEFAULTS.visualStyle;
         document.getElementById('buttonSize').value = config.settings.buttonSize || DEFAULTS.buttonSize;
         const iosSpacing = config.settings.iosSpacing || DEFAULTS.iosSpacing;
         document.getElementById('iosSpacing').value = iosSpacing;
         document.getElementById('iosSpacingValue').textContent = iosSpacing + 'rem';
         toggleIosSpacing();
         document.getElementById('gridColumns').value = config.settings.gridColumns || DEFAULTS.gridColumns;
-        document.getElementById('cardStyle').value = config.settings.cardStyle || DEFAULTS.cardStyle;
         document.getElementById('visualEffects').value = config.settings.visualEffects || DEFAULTS.visualEffects;
         document.getElementById('openLinksNewTab').checked = config.settings.openLinksNewTab || false;
 
@@ -4472,13 +4643,12 @@ function resetAll() {
     document.getElementById('destinationPath').value = DEFAULTS.destinationPath;
 
     // Reset link layout settings
-    document.getElementById('buttonStyle').value = DEFAULTS.buttonStyle;
+    document.getElementById('visualStyle').value = DEFAULTS.visualStyle;
     document.getElementById('buttonSize').value = DEFAULTS.buttonSize;
     document.getElementById('iosSpacing').value = DEFAULTS.iosSpacing;
     document.getElementById('iosSpacingValue').textContent = DEFAULTS.iosSpacing + 'rem';
     toggleIosSpacing();
     document.getElementById('gridColumns').value = DEFAULTS.gridColumns;
-    document.getElementById('cardStyle').value = DEFAULTS.cardStyle;
     document.getElementById('visualEffects').value = DEFAULTS.visualEffects;
     document.getElementById('openLinksNewTab').checked = DEFAULTS.openLinksNewTab;
 

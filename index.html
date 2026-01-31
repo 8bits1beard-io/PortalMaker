@@ -126,15 +126,7 @@
                     </div>
 
                     <div id="groupSettings" style="display: none; margin-top: 1rem;">
-                        <div class="form-group">
-                            <label for="cardStyle">Group Style</label>
-                            <select id="cardStyle" onchange="updatePreview()">
-                                <option value="subtle" selected>Subtle</option>
-                                <option value="elevated">Elevated</option>
-                                <option value="glass">Glass</option>
-                                <option value="bordered">Bordered</option>
-                            </select>
-                        </div>
+                        <!-- Group style now controlled by Visual Style in Style tab -->
                     </div>
                 </section>
 
@@ -208,16 +200,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="buttonStyle">Button Style</label>
-                    <select id="buttonStyle" onchange="toggleIosSpacing(); updatePreview()">
+                    <label for="visualStyle">Visual Style</label>
+                    <select id="visualStyle" onchange="toggleIosSpacing(); updatePreview()">
+                        <option value="ios">iOS</option>
                         <option value="rounded" selected>Rounded</option>
-                        <option value="square">Square</option>
-                        <option value="textonly">Text only</option>
+                        <option value="glass">Glass</option>
+                        <option value="elevated">Elevated</option>
+                        <option value="minimal">Minimal</option>
                         <option value="gradient">Gradient</option>
                         <option value="outline">Outline</option>
-                        <option value="elevated">Elevated</option>
-                        <option value="glass">Glass</option>
-                        <option value="ios">iOS App</option>
+                        <option value="square">Square</option>
                     </select>
                 </div>
                 <div class="form-group" id="iosSpacingGroup" style="display:none;">
@@ -392,30 +384,30 @@
                     <div class="form-group">
                         <div class="checkbox-group">
                             <input type="checkbox" id="showNetworkIdentifier" onchange="validatePositions(); updatePreview(); updateDateTimePositionOptions();">
-                            <label for="showNetworkIdentifier">Show identifier from FQDN</label>
+                            <label for="showNetworkIdentifier">Show info from device name</label>
                         </div>
                         <p style="color: var(--text-secondary); font-size: 0.75rem; margin: 0.35rem 0 0;">
-                            Extract a portion of the device's fully qualified domain name (FQDN).
+                            Display location, site code, or other info embedded in the device's network name.
                         </p>
                     </div>
 
                     <div id="networkIdentifierDetails" style="display: none;">
                         <div class="form-group">
-                            <label for="networkIdentifierDisplay">Display value</label>
+                            <label for="networkIdentifierDisplay">Extract</label>
                             <select id="networkIdentifierDisplay" onchange="updatePreview()">
-                                <option value="fqdn">Full FQDN</option>
-                                <option value="1" selected>Capture Group 1</option>
-                                <option value="2">Capture Group 2</option>
-                                <option value="3">Capture Group 3</option>
-                                <option value="4">Capture Group 4</option>
-                                <option value="5">Capture Group 5</option>
+                                <option value="fqdn">Full device name</option>
+                                <option value="1" selected>1st match</option>
+                                <option value="2">2nd match</option>
+                                <option value="3">3rd match</option>
+                                <option value="4">4th match</option>
+                                <option value="5">5th match</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="networkIdentifierPattern">Pattern</label>
+                            <label for="networkIdentifierPattern">Pattern (regex)</label>
                             <input type="text" id="networkIdentifierPattern" value="^[^.]+\.([^.]+)\.([^.]+)\..*" oninput="updatePreview()">
-                            <small style="color: var(--text-secondary);">Regex pattern with capture groups. Select which group to display above.</small>
+                            <small style="color: var(--text-secondary);">Use parentheses to define capture groups, then select which match to display above.</small>
                         </div>
 
                         <div class="form-group">
@@ -425,7 +417,7 @@
                     </div>
 
                     <div class="form-group" id="networkIdentifierPositionGroup" style="display: none;">
-                        <label for="networkIdentifierPosition">Identifier position</label>
+                        <label for="networkIdentifierPosition">Position</label>
                         <select id="networkIdentifierPosition" onchange="validatePositions(); updatePreview(); updateDateTimePositionOptions();">
                             <option value="top-left" selected>Top Left</option>
                             <option value="top-center">Top Center</option>

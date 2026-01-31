@@ -19,8 +19,7 @@
 - **Icon Library** - 40+ built-in SVG icons for groups and links
 - **App Presets** - 21 built-in Windows apps plus custom user-defined applications
 - **Link Layouts** - Cards, List, or Grid display with configurable columns
-- **Button Styles** - Rounded, Square, Text-only, Gradient, Outline, Elevated, or Glass
-- **Group Styles** - Subtle, Elevated, Glass, or Bordered card appearances
+- **Visual Styles** - iOS, Rounded, Glass, Elevated, Minimal, Gradient, Outline, or Square — unified button + group styling
 - **Animation Effects** - None, Subtle, or Enhanced animation options
 - **Button Sizes** - Small, Medium, or Large button sizing
 - **Time-Based Greeting** - Optional "Good morning/afternoon/evening" greeting prefix
@@ -28,7 +27,7 @@
 - **Icon-Forward Tiles** - Large icon tiles with labels for app-launcher style
 - **Announcement Banner** - Optional banner with Info/Warning/Urgent styles
 - **Computer Name Display** - Show hostname or FQDN with flexible positioning (top-right, footer, or below greeting)
-- **FQDN Identifier** - Extract site/region from device FQDN via nslookup
+- **Device Name Info** - Extract and display location, site code, or region embedded in device names
 - **Drag-and-Drop** - Reorder groups and links by dragging
 - **Quick Start Templates** - Load ready-made kiosk layouts
 - **Auto-Redirect** - Optionally redirect to another page after a delay
@@ -54,14 +53,13 @@
 | Main Logo | Logo displayed above the greeting (upload SVG or enter URL) |
 | Small Logo | Secondary logo with flexible positioning (corner or beside greeting) |
 | Computer Name | Toggle display with format (hostname or FQDN) and position (top-right, footer, or below greeting) |
-| FQDN Identifier | Extract site/region from device FQDN via nslookup with configurable position |
+| Device Name Info | Extract and display location, site, or region from the device's network name |
 | Date/Time | Optional live clock (ISO 8601) |
 | Footer | Optional footer text |
 | Auto-Redirect | Redirect to another URL after specified seconds |
 | Announcement Banner | Optional banner with title, message, and style (Info/Warning/Urgent) |
 | Link Layout | Cards (default), List, or Grid display |
-| Button Style | Rounded (default), Square, Text-only, Gradient, Outline, Elevated, or Glass |
-| Group Style | Subtle (default), Elevated, Glass, or Bordered card appearances |
+| Visual Style | Unified button + group styling: iOS, Rounded (default), Glass, Elevated, Minimal, Gradient, Outline, Square |
 | Animations | None, Subtle (default), or Enhanced animation effects |
 | Button Size | Small, Medium (default), or Large |
 | Script Name | Name used in the PowerShell script filename |

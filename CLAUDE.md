@@ -37,6 +37,7 @@ let customPresets = [];    // User-defined application presets
 ### Key Constants
 - `APP_VERSION` - Current version string (update when releasing)
 - `DEFAULTS` - Default configuration values (colors, banner, button size, computer name format, greeting mode, iOS spacing, open links in new tab). Note: `linkLayout` is auto-determined (cards when groups exist, grid for standalone links only)
+- `VISUAL_STYLES` - Unified visual style presets that define both button and group appearance (ios, rounded, glass, elevated, minimal, gradient, outline, square)
 - `BANNER_STYLES` - Announcement banner color schemes (info, warning, urgent)
 - `TEMPLATES` - Quick-start presets (customerFacing, employeeKiosk)
 - `ICON_LIBRARY` - Built-in SVG icons organized by category (ui, microsoft, browsers, tools)
@@ -44,6 +45,22 @@ let customPresets = [];    // User-defined application presets
 - `APP_PRESETS` - Built-in Windows application shortcuts
 - `PROTOCOL_HANDLERS` - Maps custom `PortalMaker-*` protocols to executable paths
 - `themes` - 20 WCAG-compliant color themes
+
+### Visual Styles
+The `visualStyle` setting replaces the old separate `buttonStyle` and `cardStyle` settings. Each visual style defines both button and group appearance for a cohesive look:
+
+| Style | Button Type | Group Type | Description |
+|-------|-------------|------------|-------------|
+| `ios` | ios | ios | App-style icons with iOS Settings-like grouped lists |
+| `rounded` | rounded | subtle | Soft rounded buttons with subtle frosted cards |
+| `glass` | glass | glass | Full glassmorphism effect |
+| `elevated` | elevated | elevated | Prominent shadows and depth |
+| `minimal` | textonly | none | Clean text links, no card backgrounds |
+| `gradient` | gradient | elevated | Subtle gradients with depth |
+| `outline` | outline | bordered | Elegant bordered buttons and cards |
+| `square` | square | bordered | Sharp corners, modern look |
+
+Migration: Old configs with `buttonStyle`/`cardStyle` are automatically migrated to the closest `visualStyle` match.
 
 ### Rendering Pattern
 Template literals with inline event handlers. All user content runs through `escapeHtml()` for XSS prevention.
@@ -83,10 +100,10 @@ A `<select id="greetingMode">` dropdown controls greeting behavior with four mod
 ### iOS Spacing
 When button style is `ios`, a "Shortcut Spacing" slider (`iosSpacing`, 0–2rem, default 0.75rem) controls padding between shortcuts. `toggleIosSpacing()` shows/hides the slider based on button style. The value applies to button padding, standalone grid gap, and links-list gap in the generated CSS.
 
-### FQDN Identifier Feature
-Uses `nslookup` for reverse DNS lookup to determine fully qualified domain name. Supports:
+### Device Name Info Feature
+Extracts and displays location, site code, or other info embedded in device names (FQDN). Uses `nslookup` for reverse DNS lookup. Supports:
 - Computer name format option: `hostname` or `fqdn`
-- Network identifier display modes with regex pattern matching
+- Regex pattern matching to extract specific segments (e.g., site code, region)
 - Position options include `below-greeting` for centered display under greeting text
 
 ### Custom Presets
